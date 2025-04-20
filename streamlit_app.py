@@ -2,11 +2,15 @@ import streamlit as st
 import ee
 import geemap.foliumap as geemap
 
-# Path to your service account key JSON file
-SERVICE_ACCOUNT = 'earth-engine-service-account@your-project.iam.gserviceaccount.com'
-KEY_PATH =  st.secrets(private_key)
-# Authenticate and initialize
-credentials = ee.ServiceAccountCredentials(SERVICE_ACCOUNT, KEY_PATH)
+# Load credentials from Streamlit secrets
+credentials_dict = st.secrets["earthengine"]
+
+# Convert dict to JSON string and parse it
+service_account_info = json.loads(json.dumps(credentials_dict))
+
+# Authenticate and initialize Earth Engine
+credentials = ee.ServiceAccountCredentials(
+    service_account_info['client_email'], service_account_info)
 ee.Initialize(credentials)
 
 # Title
