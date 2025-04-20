@@ -2,8 +2,10 @@ import streamlit as st
 import ee
 import geemap.foliumap as geemap
 
+# authenicate
+ee.Authenticate(auth_mode='notebook')
 # Initialize Earth Engine
-ee.Initialize()
+ee.Initialize(project='ee-project-457404')
 
 # Title
 st.title("Earth Engine Web App")
