@@ -3,7 +3,7 @@ import ee
 import geemap.foliumap as geemap
 
 # authenicate
-ee.Authenticate(auth_mode='notebook')
+ee.Authenticate()
 # Initialize Earth Engine
 ee.Initialize(project='ee-project-457404')
 
