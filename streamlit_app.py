@@ -9,8 +9,7 @@ from google.oauth2 import service_account
 service_account_info = dict(st.secrets["earthengine"])
 
 # Create Google credentials object from service account info
-credentials = ee.ServiceAccountCredentials(
-    service_account_info['client_email'], service_account_info)
+credentials = service_account.Credentials.from_service_account_info(service_account_info)
 
 # Initialize Earth Engine with these credentials
 ee.Initialize(credentials)
