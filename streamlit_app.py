@@ -2,10 +2,14 @@ import streamlit as st
 import ee
 import geemap.foliumap as geemap
 
-# authenicate
-ee.Authenticate()
-# Initialize Earth Engine
-ee.Initialize(project='ee-project-457404')
+# Path to your service account key JSON file
+SERVICE_ACCOUNT = 'earth-engine-service-account@your-project.iam.gserviceaccount.com'
+KEY_PATH = 'ee-project-457404-0ca271002802.json'
+
+# Authenticate and initialize
+credentials = ee.ServiceAccountCredentials(SERVICE_ACCOUNT, KEY_PATH)
+ee.ServiceAccountCredentials()
+ee.Initialize(credentials)
 
 # Title
 st.title("Earth Engine Web App")
