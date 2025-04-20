@@ -1,6 +1,27 @@
 import streamlit as st
+import ee
+import geemap.foliumap as geemap
 
-st.title("🎈 My new app")
-st.write(
-    "Let's start building! For help and inspiration, head over to [docs.streamlit.io](https://docs.streamlit.io/)."
-)
+# Initialize Earth Engine
+ee.Initialize()
+
+# Title
+st.title("Earth Engine Web App")
+
+# Dropdown
+country_list = ['Lebanon', 'Jordan', 'Syria']
+country = st.selectbox("Select a country", country_list)
+
+# Map
+Map = geemap.Map()
+
+# Filter by country
+countries = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017")
+filtered = countries.filter(ee.Filter.eq('country_na', country))
+
+# Add layer
+Map.addLayer(filtered, {}, country)
+Map.centerObject(filtered)
+
+# Display map
+Map.to_streamlit(height=600)
