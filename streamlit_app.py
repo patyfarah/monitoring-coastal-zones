@@ -1,5 +1,6 @@
 import streamlit as st
 import ee
+import json
 import geemap.foliumap as geemap
 
 # Load credentials from Streamlit secrets
