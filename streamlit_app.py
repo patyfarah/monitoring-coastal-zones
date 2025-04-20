@@ -8,7 +8,6 @@ KEY_PATH = 'ee-project-457404-0ca271002802.json'
 
 # Authenticate and initialize
 credentials = ee.ServiceAccountCredentials(SERVICE_ACCOUNT, KEY_PATH)
-ee.ServiceAccountCredentials()
 ee.Initialize(credentials)
 
 # Title
