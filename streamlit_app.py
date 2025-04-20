@@ -8,8 +8,12 @@ from google.oauth2 import service_account
 # Load service account info from Streamlit secrets
 service_account_info = dict(st.secrets["earthengine"])
 
-# Create Google credentials object from service account info
-credentials = service_account.Credentials.from_service_account_info(service_account_info)
+SCOPES = ['https://www.googleapis.com/auth/earthengine']
+
+# Create Google credentials object from service account info with the required scopes
+credentials = service_account.Credentials.from_service_account_info(
+    service_account_info, scopes=SCOPES)
+
 
 # Initialize Earth Engine with these credentials
 ee.Initialize(credentials)
