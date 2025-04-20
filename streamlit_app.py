@@ -4,7 +4,7 @@ import geemap.foliumap as geemap
 
 # Path to your service account key JSON file
 SERVICE_ACCOUNT = 'earth-engine-service-account@your-project.iam.gserviceaccount.com'
-KEY_PATH =  private_key
+KEY_PATH =  st.secrets(private_key)
 # Authenticate and initialize
 credentials = ee.ServiceAccountCredentials(SERVICE_ACCOUNT, KEY_PATH)
 ee.Initialize(credentials)
