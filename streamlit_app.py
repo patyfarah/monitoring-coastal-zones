@@ -2,7 +2,7 @@ import streamlit as st
 import ee
 import json
 import geemap.foliumap as geemap
-from google.oauth2 import service_account 
+
 
 # Load service account info from Streamlit secrets
 service_account_info = dict(st.secrets["earthengine"])
