@@ -3,15 +3,13 @@ import ee
 import json
 import geemap.foliumap as geemap
 
-# Load credentials from Streamlit secrets
-credentials_dict = dict(st.secrets["earthengine"])  # Convert AttrDict to dict
+# Load service account info from Streamlit secrets
+service_account_info = dict(st.secrets["earthengine"])
 
-# Now convert dict to JSON string and parse it
-service_account_info = json.loads(json.dumps(credentials_dict))
+# Create Google credentials object from service account info
+credentials = service_account.Credentials.from_service_account_info(service_account_info)
 
-# Authenticate and initialize Earth Engine
-credentials = ee.ServiceAccountCredentials(
-    service_account_info['client_email'], service_account_info)
+# Initialize Earth Engine with these credentials
 ee.Initialize(credentials)
 
 
