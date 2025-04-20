@@ -6,10 +6,10 @@ import geemap.foliumap as geemap
 
 # Load service account info from Streamlit secrets
 service_account_info = dict(st.secrets["earthengine"])
-SERVICE_ACCOUNT = 'earth-engine-service-account@your-project.iam.gserviceaccount.com'
 
 # Create Google credentials object from service account info
-credentials = SERVICE_ACCOUNT.Credentials.from_service_account_info(service_account_info)
+credentials = ee.ServiceAccountCredentials(
+    service_account_info['client_email'], service_account_info)
 
 # Initialize Earth Engine with these credentials
 ee.Initialize(credentials)
