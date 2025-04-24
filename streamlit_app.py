@@ -63,4 +63,4 @@ with col2:
     Map
 
     # Display map
-    Map.to_streamlit(height=400)
+    Map.to_streamlit(height=600)
