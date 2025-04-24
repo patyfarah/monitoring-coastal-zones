@@ -22,19 +22,31 @@ ee.Initialize(credentials)
 # Title
 st.title("GES-Coastal Monitor")
 
-# Dropdown
-
-
 # Create two columns: left for filters, right for map
 col1, col2 = st.columns([1, 3])
 
 # Filters on the left
 with col1:
     st.subheader("Parameters")
-    country_list = ['Lebanon', 'Jordan', 'Syria']
-    country = st.selectbox("Select a country", country_list)
-    landcover = st.multiselect("Land Cover", ["Forest", "Urban", "Water", "Agriculture"])
-    year = st.slider("Year", 2000, 2025, 2020)
+    # Country selector
+    country = st.selectbox(
+        "Select Country",
+        ["Morocco", "Algeria", "Tunisia", "Libya", "Arab Republic of Egypt", "Syrian Arab Republic", "Lebanon", "Yemen", "Mauritania"]
+    )
+
+    # Year range inputs
+    start_year = st.number_input("Start Year", min_value=1984)
+    end_year = st.number_input("End Year", min_value=1984)
+
+    # Coastal buffer input
+    buffer_km = st.number_input("Coastal Buffer (km)", min_value=0, max_value=100, value=10)
+
+    # Satellite product selector
+    satellite_product = st.selectbox(
+        "Satellite Product",
+        ["Landsat 8", "Sentinel-2", "MODIS NDVI", "PlanetScope"]
+    )
+
 
 # Map on the right
 with col2:
