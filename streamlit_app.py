@@ -42,7 +42,6 @@ col1, col2 = st.columns([1, 3])
 
 # Filters on the left
 with col1:
-
     st.subheader("Parameters")
     st.markdown('<div class="left-column">', unsafe_allow_html=True)
     # Country selector
