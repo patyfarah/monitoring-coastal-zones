@@ -20,22 +20,34 @@ ee.Initialize(credentials)
 
 
 # Title
-st.title("Earth Engine Web App")
+st.title("GES-Coastal Monitor")
 
 # Dropdown
-country_list = ['Lebanon', 'Jordan', 'Syria']
-country = st.selectbox("Select a country", country_list)
 
-# Map
-Map = geemap.Map()
 
-# Filter by country
-countries = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017")
-filtered = countries.filter(ee.Filter.eq('country_na', country))
+# Create two columns: left for filters, right for map
+col1, col2 = st.columns([1, 3])
 
-# Add layer
-Map.addLayer(filtered, {}, country)
-Map.centerObject(filtered)
+# Filters on the left
+with col1:
+    st.header("Filters")
+    country_list = ['Lebanon', 'Jordan', 'Syria']
+    country = st.selectbox("Select a country", country_list)
+    landcover = st.multiselect("Land Cover", ["Forest", "Urban", "Water", "Agriculture"])
+    year = st.slider("Year", 2000, 2025, 2020)
 
-# Display map
-Map.to_streamlit(height=600)
+# Map on the right
+with col2:
+    st.header("Map View")
+    Map = geemap.Map()
+
+    # Filter by country
+    countries = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017")
+    filtered = countries.filter(ee.Filter.eq('country_na', country))
+
+    # Add layer
+    Map.addLayer(filtered, {}, country)
+    Map.centerObject(filtered)
+
+    # Display map
+    Map.to_streamlit(height=600)
