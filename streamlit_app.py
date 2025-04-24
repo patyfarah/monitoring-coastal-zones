@@ -18,6 +18,24 @@ credentials = service_account.Credentials.from_service_account_info(
 # Initialize Earth Engine with these credentials
 ee.Initialize(credentials)
 
+# Custom CSS to add background color to the columns
+st.markdown(
+    """
+    <style>
+    .col1-custom {
+        background-color: #f0f2f6;
+        padding: 1em;
+        border-radius: 10px;
+    }
+    .col2-custom {
+        background-color: #e8f5e9;
+        padding: 1em;
+        border-radius: 10px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # Title
 st.title("GES-Coastal Monitor")
