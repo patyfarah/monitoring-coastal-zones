@@ -51,48 +51,44 @@ st.markdown('<div class="container">', unsafe_allow_html=True)
 
 # Filters on the left
 with col1:
-    with st.container():
-        st.markdown('<div class="left-column">', unsafe_allow_html=True)
-        st.subheader("Parameters")
-        # Country selector
-        country = st.selectbox(
-            "Select Country",
-            ["Morocco", "Algeria", "Tunisia", "Libya", "Arab Republic of Egypt", "Syrian Arab Republic", "Lebanon", "Yemen", "Mauritania"]
-        )
-    
-        # Year range inputs
-        start_year = st.number_input("Start Year",value=1984)
-        end_year = st.number_input("End Year",value=2025)
-    
-        # Coastal buffer input
-        buffer_km = st.number_input("Coastal Buffer (km)", min_value=0, max_value=100, value=10)
-    
-        # Satellite product selector
-        satellite_product = st.selectbox(
-            "Satellite Product",
-            ["Landsat 8", "Sentinel-2", "MODIS NDVI", "PlanetScope"]
-        )
-        st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('<div class="left-column">', unsafe_allow_html=True)
+    st.subheader("Parameters")
+    # Country selector
+    country = st.selectbox(
+        "Select Country",
+        ["Morocco", "Algeria", "Tunisia", "Libya", "Arab Republic of Egypt", "Syrian Arab Republic", "Lebanon", "Yemen", "Mauritania"]
+    )
+
+    # Year range inputs
+    start_year = st.number_input("Start Year",value=1984)
+    end_year = st.number_input("End Year",value=2025)
+
+    # Coastal buffer input
+    buffer_km = st.number_input("Coastal Buffer (km)", min_value=0, max_value=100, value=10)
+
+    # Satellite product selector
+    satellite_product = st.selectbox(
+        "Satellite Product",
+        ["Landsat 8", "Sentinel-2", "MODIS NDVI", "PlanetScope"]
+    )
+    st.markdown('</div>', unsafe_allow_html=True)
     
 
 # Map on the right
 with col2:
-    with st.container():
-        st.markdown('<div class="right-column">', unsafe_allow_html=True)
-        st.subheader("Good Environmental Status")
-        Map = geemap.Map(data_ctrl=False, toolbar_ctrl=False, draw_ctrl=False)
-    
-        # Filter by country
-        countries = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017")
-        filtered = countries.filter(ee.Filter.eq('country_na', country))
-    
-        # Add layer
-        Map.addLayer(filtered, {}, country)
-        Map.centerObject(filtered)
-    
-        # Display map
-        Map.to_streamlit(height=400)
-        st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('<div class="right-column">', unsafe_allow_html=True)
+    st.subheader("Good Environmental Status")
+    Map = geemap.Map(data_ctrl=False, toolbar_ctrl=False, draw_ctrl=False)
+
+    # Filter by country
+    countries = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017")
+    filtered = countries.filter(ee.Filter.eq('country_na', country))
+
+    # Add layer
+    Map.addLayer(filtered, {}, country)
+    Map.centerObject(filtered)
+
+    # Display map
+    Map.to_streamlit(height=400)
+    st.markdown('</div>', unsafe_allow_html=True)
         
-# Close main container
-st.markdown('</div>', unsafe_allow_html=True)
