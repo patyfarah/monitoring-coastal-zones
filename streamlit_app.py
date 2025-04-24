@@ -45,26 +45,28 @@ col1, col2 = st.columns([1, 3])
 
 # Filters on the left
 with col1:
-    st.subheader("Parameters")
-    # Country selector
-    country = st.selectbox(
-        "Select Country",
-        ["Morocco", "Algeria", "Tunisia", "Libya", "Arab Republic of Egypt", "Syrian Arab Republic", "Lebanon", "Yemen", "Mauritania"]
-    )
-
-    # Year range inputs
-    start_year = st.number_input("Start Year",value=1984)
-    end_year = st.number_input("End Year",value=2025)
-
-    # Coastal buffer input
-    buffer_km = st.number_input("Coastal Buffer (km)", min_value=0, max_value=100, value=10)
-
-    # Satellite product selector
-    satellite_product = st.selectbox(
-        "Satellite Product",
-        ["Landsat 8", "Sentinel-2", "MODIS NDVI", "PlanetScope"]
-    )
-
+    with st.container():
+        st.markdown('<div class="col1-custom">', unsafe_allow_html=True)
+        st.subheader("Parameters")
+        # Country selector
+        country = st.selectbox(
+            "Select Country",
+            ["Morocco", "Algeria", "Tunisia", "Libya", "Arab Republic of Egypt", "Syrian Arab Republic", "Lebanon", "Yemen", "Mauritania"]
+        )
+    
+        # Year range inputs
+        start_year = st.number_input("Start Year",value=1984)
+        end_year = st.number_input("End Year",value=2025)
+    
+        # Coastal buffer input
+        buffer_km = st.number_input("Coastal Buffer (km)", min_value=0, max_value=100, value=10)
+    
+        # Satellite product selector
+        satellite_product = st.selectbox(
+            "Satellite Product",
+            ["Landsat 8", "Sentinel-2", "MODIS NDVI", "PlanetScope"]
+        )
+    
 
 # Map on the right
 with col2:
