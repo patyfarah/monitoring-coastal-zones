@@ -40,9 +40,6 @@ st.title("GES-Coastal Monitor")
 # Create two columns: left for filters, right for map
 col1, col2 = st.columns([1, 3])
 
-# Open custom container
-st.markdown('<div class="container">', unsafe_allow_html=True)
-
 # Filters on the left
 with col1:
 
