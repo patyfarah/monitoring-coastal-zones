@@ -71,16 +71,19 @@ with col1:
 
 # Map on the right
 with col2:
-    st.subheader("Good Environmental Status")
-    Map = geemap.Map(data_ctrl=False, toolbar_ctrl=False, draw_ctrl=False)
-
-    # Filter by country
-    countries = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017")
-    filtered = countries.filter(ee.Filter.eq('country_na', country))
-
-    # Add layer
-    Map.addLayer(filtered, {}, country)
-    Map.centerObject(filtered)
-
-    # Display map
-    Map.to_streamlit(height=400)
+    with st.container():
+        st.markdown('<div class="col2-custom">', unsafe_allow_html=True)
+        st.subheader("Good Environmental Status")
+        Map = geemap.Map(data_ctrl=False, toolbar_ctrl=False, draw_ctrl=False)
+    
+        # Filter by country
+        countries = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017")
+        filtered = countries.filter(ee.Filter.eq('country_na', country))
+    
+        # Add layer
+        Map.addLayer(filtered, {}, country)
+        Map.centerObject(filtered)
+    
+        # Display map
+        Map.to_streamlit(height=400)
+        st.markdown('</div>', unsafe_allow_html=True)
