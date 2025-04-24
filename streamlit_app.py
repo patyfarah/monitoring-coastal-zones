@@ -35,8 +35,8 @@ with col1:
     )
 
     # Year range inputs
-    start_year = st.number_input("Start Year", min_value=1984)
-    end_year = st.number_input("End Year", min_value=1984)
+    start_year = st.number_input("Start Year")
+    end_year = st.number_input("End Year")
 
     # Coastal buffer input
     buffer_km = st.number_input("Coastal Buffer (km)", min_value=0, max_value=100, value=10)
