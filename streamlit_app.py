@@ -62,4 +62,4 @@ with col2:
     Map.centerObject(filtered)
 
     # Display map
-    Map.to_streamlit(height=600)
+    Map.to_streamlit(height=400)
