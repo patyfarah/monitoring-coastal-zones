@@ -30,7 +30,7 @@ col1, col2 = st.columns([1, 3])
 
 # Filters on the left
 with col1:
-    st.header("Filters")
+    st.subheader("Parameters")
     country_list = ['Lebanon', 'Jordan', 'Syria']
     country = st.selectbox("Select a country", country_list)
     landcover = st.multiselect("Land Cover", ["Forest", "Urban", "Water", "Agriculture"])
@@ -38,7 +38,7 @@ with col1:
 
 # Map on the right
 with col2:
-    st.header("Map View")
+    st.subheader("Good Environmental Status")
     Map = geemap.Map()
 
     # Filter by country
