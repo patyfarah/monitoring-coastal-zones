@@ -21,18 +21,12 @@ ee.Initialize(credentials)
 # Custom CSS for two-column layout with colored backgrounds
 st.markdown("""
     <style>
-    .container {
-        display: flex;
-        gap: 2%;
-    }
     .left-column {
-        flex: 1;
         background-color: #f0f2f6;
         padding: 20px;
         border-radius: 10px;
     }
     .right-column {
-        flex: 3;
         background-color: #e8f5e9;
         padding: 20px;
         border-radius: 10px;
