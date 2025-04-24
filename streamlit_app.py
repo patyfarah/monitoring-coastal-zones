@@ -60,7 +60,6 @@ with col2:
     # Add layer
     Map.addLayer(filtered, {}, country)
     Map.centerObject(filtered)
-    Map
 
     # Display map
     Map.to_streamlit(height=600)
