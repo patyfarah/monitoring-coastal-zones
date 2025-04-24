@@ -93,3 +93,6 @@ with col2:
         # Display map
         Map.to_streamlit(height=400)
         st.markdown('</div>', unsafe_allow_html=True)
+        
+# Close main container
+st.markdown('</div>', unsafe_allow_html=True)
