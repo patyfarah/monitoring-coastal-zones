@@ -66,6 +66,7 @@ with col1:
             "Satellite Product",
             ["Landsat 8", "Sentinel-2", "MODIS NDVI", "PlanetScope"]
         )
+        st.markdown('</div>', unsafe_allow_html=True)
     
 
 # Map on the right
