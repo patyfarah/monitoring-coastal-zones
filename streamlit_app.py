@@ -51,8 +51,9 @@ st.markdown('<div class="container">', unsafe_allow_html=True)
 
 # Filters on the left
 with col1:
-    st.markdown('<div class="left-column">', unsafe_allow_html=True)
+
     st.subheader("Parameters")
+    st.markdown('<div class="left-column">', unsafe_allow_html=True)
     # Country selector
     country = st.selectbox(
         "Select Country",
@@ -76,8 +77,9 @@ with col1:
 
 # Map on the right
 with col2:
-    st.markdown('<div class="right-column">', unsafe_allow_html=True)
+    
     st.subheader("Good Environmental Status")
+    st.markdown('<div class="right-column">', unsafe_allow_html=True)
     Map = geemap.Map(center=[33.89, 35.5], zoom=6,draw_ctrl=False, data_ctrl=False, toolbar_ctrl=False)
 
     # Filter by country
