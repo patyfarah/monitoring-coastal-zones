@@ -51,7 +51,7 @@ with col1:
 # Map on the right
 with col2:
     st.subheader("Good Environmental Status")
-    Map = geemap.Map(measure_ctrl=False,draw_ctrl=False,toolbar_ctrl=False)
+    Map = geemap.Map(data_ctrl=False, toolbar_ctrl=False, draw_ctrl=False)
 
     # Filter by country
     countries = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017")
@@ -60,6 +60,7 @@ with col2:
     # Add layer
     Map.addLayer(filtered, {}, country)
     Map.centerObject(filtered)
+    Map
 
     # Display map
-    Map.to_streamlit(height=600)
+    Map.to_streamlit(height=400)
