@@ -51,7 +51,7 @@ with col1:
 # Map on the right
 with col2:
     st.subheader("Good Environmental Status")
-    Map = geemap.Map(measure_ctrl=False,data_ctrl=False,toolbar_ctrl=False)
+    Map = geemap.Map(measure_ctrl=False,draw_ctrl=False,toolbar_ctrl=False)
 
     # Filter by country
     countries = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017")
