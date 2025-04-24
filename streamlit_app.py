@@ -78,7 +78,7 @@ with col1:
 with col2:
     st.markdown('<div class="right-column">', unsafe_allow_html=True)
     st.subheader("Good Environmental Status")
-    Map = geemap.Map(draw_ctrl=False, data_ctrl=False, toolbar_ctrl=False)
+    Map = geemap.Map(center=[33.89, 35.5], zoom=6,draw_ctrl=False, data_ctrl=False, toolbar_ctrl=False)
 
     # Filter by country
     countries = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017")
