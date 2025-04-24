@@ -18,24 +18,27 @@ credentials = service_account.Credentials.from_service_account_info(
 # Initialize Earth Engine with these credentials
 ee.Initialize(credentials)
 
-# Custom CSS to add background color to the columns
-st.markdown(
-    """
+# Custom CSS for two-column layout with colored backgrounds
+st.markdown("""
     <style>
-    .col1-custom {
+    .container {
+        display: flex;
+        gap: 2%;
+    }
+    .left-column {
+        flex: 1;
         background-color: #f0f2f6;
-        padding: 1em;
+        padding: 20px;
         border-radius: 10px;
     }
-    .col2-custom {
+    .right-column {
+        flex: 3;
         background-color: #e8f5e9;
-        padding: 1em;
+        padding: 20px;
         border-radius: 10px;
     }
     </style>
-    """,
-    unsafe_allow_html=True
-)
+""", unsafe_allow_html=True)
 
 # Title
 st.title("GES-Coastal Monitor")
@@ -43,10 +46,13 @@ st.title("GES-Coastal Monitor")
 # Create two columns: left for filters, right for map
 col1, col2 = st.columns([1, 3])
 
+# Open custom container
+st.markdown('<div class="container">', unsafe_allow_html=True)
+
 # Filters on the left
 with col1:
     with st.container():
-        st.markdown('<div class="col1-custom">', unsafe_allow_html=True)
+        st.markdown('<div class="left-column">', unsafe_allow_html=True)
         st.subheader("Parameters")
         # Country selector
         country = st.selectbox(
@@ -72,7 +78,7 @@ with col1:
 # Map on the right
 with col2:
     with st.container():
-        st.markdown('<div class="col2-custom">', unsafe_allow_html=True)
+        st.markdown('<div class="right-column">', unsafe_allow_html=True)
         st.subheader("Good Environmental Status")
         Map = geemap.Map(data_ctrl=False, toolbar_ctrl=False, draw_ctrl=False)
     
