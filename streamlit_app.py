@@ -49,7 +49,7 @@ with col1:
     filtered = countries.filter(ee.Filter.eq('country_na', country))
     region_geom = filtered.geometry()
     buffered = region_geom.buffer(buffer_km * 1000)
-    inland_band = buffered.intersection(region_geom)
+    inland_band = buffered.intersection(filtered)
     
     ndvi_product = st.selectbox("NDVI Product", options=["MOD13A1"])
     lst_product = st.selectbox("LST Product", options=["MOD11A1"])
