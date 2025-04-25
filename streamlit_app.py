@@ -47,6 +47,9 @@ with col1:
     # Filter country geometry
     countries = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017")
     filtered = countries.filter(ee.Filter.eq('country_na', country))
+    coastline = country.geometry().boundary()
+    buffered = coastline.buffer(buffer_km * 1000) 
+    inland_band = buffered.intersection(country.geometry())
     
     ndvi_product = st.selectbox("NDVI Product", options=["MOD13A1"])
     lst_product = st.selectbox("LST Product", options=["MOD11A1"])
