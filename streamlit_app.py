@@ -47,9 +47,9 @@ with col1:
     # Filter country geometry
     countries = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017")
     filtered = countries.filter(ee.Filter.eq('country_na', country))
-    coastline = filtered.boundary()
+    coastline = filtered.geometry().boundary()
     buffered = coastline.buffer(buffer_km * 1000) 
-    inland_band = buffered.intersection(country.geometry())
+    inland_band = buffered.intersection(filtered.geometry())
     
     ndvi_product = st.selectbox("NDVI Product", options=["MOD13A1"])
     lst_product = st.selectbox("LST Product", options=["MOD11A1"])
@@ -114,7 +114,7 @@ with col2:
     # Add layers
     Map.addLayer(ndvi_mean, {'min': 0, 'max': 9000, 'palette': ['white', 'green']}, 'Mean NDVI',shown=False)
     Map.addLayer(lst_mean, {'min': 0, 'max': 9000, 'palette': ['white', 'red']}, 'Mean LST',shown=False)
-    
+    Map.addLayer(inland_band, {}, '10km inland zone')
     Map.addLayer(filtered.style(**{
     "color": "black",
     "fillColor": "00000000",  # Transparent fill
