@@ -87,12 +87,12 @@ with col1:
         )
         task.start()
         status = task.status()
-    print(status)
-    if status['state'] == 'READY':
-        st.success("Export task started! Check Google Earth Engine tasks.")
-    else:
-        st.error(f"Export failed to start. Reason: {status}")
-        st.success(f"Export task started for {country} NDVI ({start_date} to {end_date})")
+        print(status)
+        if status['state'] == 'READY':
+            st.success("Export task started! Check Google Earth Engine tasks.")
+        else:
+            st.error(f"Export failed to start. Reason: {status}")
+            st.success(f"Export task started for {country} NDVI ({start_date} to {end_date})")
         
     
     if st.button("Export to Drive"):
