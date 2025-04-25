@@ -74,7 +74,7 @@ with col1:
     lst_mean = lst.mean().clip(filtered)
 
    # Define region of interest
-    region = image.geometry()
+    region = filtered.getInfo()
     
     # Export function and button
     def export_ndvi_to_drive():
