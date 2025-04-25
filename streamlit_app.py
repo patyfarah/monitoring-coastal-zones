@@ -79,7 +79,7 @@ with col1:
         task = ee.batch.Export.image.toDrive(
             image=ndvi_mean,
             description=f'{country}_NDVI_{start_date}_{end_date}',
-            folder='My Drive',
+            folder='earthengine',
             fileNamePrefix=f'{country}_NDVI_{start_date}_{end_date}',
             region=filtered,
             scale=250,
