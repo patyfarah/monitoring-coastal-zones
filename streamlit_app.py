@@ -83,7 +83,7 @@ with col1:
             description=f'{country}_NDVI_{start_date}_{end_date}',
             folder='earthengine',
             fileNamePrefix=f'{country}_NDVI_{start_date}_{end_date}',
-            region= region.getInfo(),
+            region= region,
             scale=250,
             fileFormat='GeoTIFF'
         )
