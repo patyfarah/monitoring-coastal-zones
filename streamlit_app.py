@@ -47,9 +47,9 @@ with col1:
     # Filter country geometry
     countries = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017")
     filtered = countries.filter(ee.Filter.eq('country_na', country))
-    coastline = filtered.geometry().polygon()
-    buffered = coastline.buffer(buffer_km * 1000) 
-    inland_band = buffered.intersection(filtered.geometry())
+    region_geom = filtered.geometry()
+    buffered = region_geom.buffer(buffer_km * 1000)
+    inland_band = buffered.intersection(region_geom)
     
     ndvi_product = st.selectbox("NDVI Product", options=["MOD13A1"])
     lst_product = st.selectbox("LST Product", options=["MOD11A1"])
@@ -86,7 +86,7 @@ with col1:
             description=f'{country}_NDVI_{start_date}_{end_date}',
             folder='earthengine',
             fileNamePrefix=f'{country}_NDVI_{start_date}_{end_date}',
-            region= region,
+            region=region_geom.bounds().getInfo()['coordinates'],
             scale=250,
             fileFormat='GeoTIFF'
         )
