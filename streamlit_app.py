@@ -78,8 +78,8 @@ with col2:
         "MOD13A1": ee.ImageCollection("MODIS/061/MOD13A1").select("NDVI")
     }
 
-    ndvi = ndvi_collections[ndvi_product] \
-    .filterBounds(country) \
+    ndvi = ndvi_collections[ndvi_product]
+    .filterBounds(country)
     .filterDate(start_date, end_date)
 
     ndvi_mean = ndvi.mean().clip(country)
