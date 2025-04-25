@@ -86,7 +86,7 @@ with col1:
             maxPixels=1e13
         )
         task.start()
-            status = task.status()
+        status = task.status()
     print(status)
     if status['state'] == 'READY':
         st.success("Export task started! Check Google Earth Engine tasks.")
