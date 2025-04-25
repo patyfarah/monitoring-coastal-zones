@@ -81,7 +81,7 @@ with col1:
             description=f'{country}_NDVI_{start_date}_{end_date}',
             folder='earthengine',
             fileNamePrefix=f'{country}_NDVI_{start_date}_{end_date}',
-            region=filtered,
+            region= filtered.geometry(),
             scale=250,
             maxPixels=1e13
         )
