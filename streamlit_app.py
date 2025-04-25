@@ -42,9 +42,13 @@ with col1:
     buffer_km = st.number_input("Coastal Buffer (km)", min_value=0, max_value=100, value=10)
 
     # Satellite product selector
-    satellite_product = st.selectbox(
+    NDVI_product = st.selectbox(
         "Satellite Product",
-        ["Landsat 8", "Sentinel-2", "MODIS NDVI", "PlanetScope"]
+        ["NDVI MOD13A1"]
+    )
+    LST_product = st.selectbox(
+    ,
+    ["LST MOD11A1"]
     )
     st.markdown('</div>', unsafe_allow_html=True)
     
