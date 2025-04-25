@@ -87,7 +87,7 @@ with col2:
     Map.addLayer(lst_mean, {'min': 0, 'max': 9000, 'palette': ['white', 'red']}, 'Mean LST')
     
     Map.addLayer(filtered.style(**{
-    "color": "red",
+    "color": "black",
     "fillColor": "00000000",  # Transparent fill
     "width": 2
     }), {}, f"{country} Border")
