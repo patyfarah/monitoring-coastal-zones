@@ -47,7 +47,6 @@ with col1:
         ["NDVI MOD13A1"]
     )
     LST_product = st.selectbox(
-    ,
     ["LST MOD11A1"]
     )
     st.markdown('</div>', unsafe_allow_html=True)
