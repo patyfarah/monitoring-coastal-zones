@@ -83,8 +83,8 @@ with col2:
     lst_mean = lst.mean().clip(filtered)
 
     # Add layers
-    Map.addLayer(ndvi_mean, {'min': 0, 'max': 9000, 'palette': ['white', 'green']}, 'Mean NDVI')
-    Map.addLayer(lst_mean, {'min': 0, 'max': 9000, 'palette': ['white', 'red']}, 'Mean LST')
+    Map.addLayer(ndvi_mean, {'min': 0, 'max': 9000, 'palette': ['white', 'green']}, 'Mean NDVI',shown=False)
+    Map.addLayer(lst_mean, {'min': 0, 'max': 9000, 'palette': ['white', 'red']}, 'Mean LST',shown=False)
     
     Map.addLayer(filtered.style(**{
     "color": "black",
