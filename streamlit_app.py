@@ -69,6 +69,10 @@ with col1:
     ndvi_mean = ndvi.mean().clip(filtered)
     lst_mean = lst.mean().clip(filtered)
 
+    # Filter country geometry
+    countries = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017")
+    filtered = countries.filter(ee.Filter.eq('country_na', country))
+    
     # Export function and button
     def export_ndvi_to_drive():
         task = ee.batch.Export.image.toDrive(
