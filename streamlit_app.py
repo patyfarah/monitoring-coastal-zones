@@ -100,12 +100,6 @@ with col2:
 
     Map = geemap.Map(center=[33.89, 35.5], zoom=6, draw_ctrl=False, data_ctrl=False, toolbar_ctrl=False)
 
-    # Filter country geometry
-    countries = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017")
-    filtered = countries.filter(ee.Filter.eq('country_na', country))
-
-
-
     # Add layers
     Map.addLayer(ndvi_mean, {'min': 0, 'max': 9000, 'palette': ['white', 'green']}, 'Mean NDVI',shown=False)
     Map.addLayer(lst_mean, {'min': 0, 'max': 9000, 'palette': ['white', 'red']}, 'Mean LST',shown=False)
