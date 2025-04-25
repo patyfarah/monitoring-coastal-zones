@@ -82,7 +82,7 @@ with col1:
     # Export function and button
     def export_ndvi_to_drive():
         task = ee.batch.Export.image.toDrive(
-            image=filtered,
+            image=ndvi_mean,
             description=f'{country}_NDVI_{start_date}_{end_date}',
             folder='earthengine',
             fileNamePrefix=f'{country}_NDVI_{start_date}_{end_date}',
