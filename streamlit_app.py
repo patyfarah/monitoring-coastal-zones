@@ -34,21 +34,21 @@ with col1:
         ["Morocco", "Algeria", "Tunisia", "Libya", "Arab Republic of Egypt", "Syrian Arab Republic", "Lebanon", "Yemen", "Mauritania"]
     )
 
-    # Year range inputs
-    start_year = st.number_input("Start Year",value=1984)
-    end_year = st.number_input("End Year",value=2025)
+    # Year range on same line
+    st.markdown("**Year Range**")
+    year_col1, year_col2 = st.columns(2)
+    with year_col1:
+        start_year = st.number_input("Start", value=1984, key="start_year")
+    with year_col2:
+        end_year = st.number_input("End", value=2025, key="end_year")
 
     # Coastal buffer input
     buffer_km = st.number_input("Coastal Buffer (km)", min_value=0, max_value=100, value=10)
 
-    # Satellite product selector
-    NDVI_product = st.selectbox(
+    # Unified Satellite product selector
+    sat_product = st.selectbox(
         "Satellite Product",
-        ["NDVI MOD13A1"]
-    )
-    LST_product = st.selectbox(
-        "Satellite Product",
-        ["LST MOD11A1"]
+        ["NDVI MOD13A1", "LST MOD11A1"]
     )
     st.markdown('</div>', unsafe_allow_html=True)
     
