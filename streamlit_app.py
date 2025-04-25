@@ -53,11 +53,11 @@ with col1:
     st.markdown("**Satellite Product**")
     ndvi_product = st.selectbox(
         label="",  # No label inside the selectbox
-        options=["NDVI MOD13A1"]
+        options=["MOD13A1","COPERNICUS/S2_NDVI"]
     )
     lst_product = st.selectbox(
     label="",  # No label inside the selectbox
-    options=["LST MOD11A1"]
+    options=["MOD11A1"]
     )
     st.markdown('</div>', unsafe_allow_html=True)
     
