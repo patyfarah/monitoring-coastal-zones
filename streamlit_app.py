@@ -64,17 +64,17 @@ with col2:
         "MOD13A1": ee.ImageCollection("MODIS/061/MOD13A1").select("NDVI")
     }
 
-    NDVI = (
+    ndvi = (
         ndvi_collections[ndvi_product]
         .filterBounds(filtered)
         .filterDate(start_date, end_date)
     )
 
     lst_collections = {
-        "MOD11A1": ee.ImageCollection("MODIS/061/MOD11A1").select("LST")
+        "MOD11A1": ee.ImageCollection("MODIS/061/MOD11A1").select("LST_Day_1km")
     }
 
-    LST = (
+    lst = (
         lst_collections[lst_product]
         .filterBounds(filtered)
         .filterDate(start_date, end_date)
