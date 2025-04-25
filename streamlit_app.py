@@ -85,7 +85,7 @@ with col1:
             fileNamePrefix=f'{country}_NDVI_{start_date}_{end_date}',
             region= region,
             scale=250,
-            maxPixels=1e13
+            fileFormat='GeoTIFF'
         )
         task.start()
         status = task.status()
@@ -94,8 +94,7 @@ with col1:
             st.success("Export task started! Check Google Earth Engine tasks.")
         else:
             st.error(f"Export failed to start. Reason: {status}")
-            st.success(f"Export task started for {country} NDVI ({start_date} to {end_date})")
-        
+       
     
     if st.button("Export to Drive"):
         export_ndvi_to_drive()
