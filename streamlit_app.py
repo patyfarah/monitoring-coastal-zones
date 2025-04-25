@@ -79,8 +79,8 @@ with col2:
         .filterBounds(filtered)
         .filterDate(start_date, end_date)
     )
-    ndvi_mean = NDVI.mean().clip(filtered)
-    lst_mean = LST.mean().clip(filtered)
+    ndvi_mean = ndvi.mean().clip(filtered)
+    lst_mean = lst.mean().clip(filtered)
 
     # Add layers
     Map.addLayer(ndvi_mean, {'min': 0, 'max': 9000, 'palette': ['white', 'green']}, 'Mean NDVI')
