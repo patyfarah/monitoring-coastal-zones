@@ -46,9 +46,14 @@ with col1:
     buffer_km = st.number_input("Coastal Buffer (km)", min_value=0, max_value=100, value=10)
 
     # Unified Satellite product selector
-    sat_product = st.selectbox(
-        "Satellite Product",
-        ["NDVI MOD13A1", "LST MOD11A1"]
+    st.markdown("**Satellite Product**")
+    ndvi_product = st.selectbox(
+        label="",  # No label inside the selectbox
+        options=["NDVI MOD13A1"]
+    )
+    lst_product = st.selectbox(
+    label="",  # No label inside the selectbox
+    options=["LST MOD11A1"]
     )
     st.markdown('</div>', unsafe_allow_html=True)
     
@@ -70,5 +75,26 @@ with col2:
 
     # Display map
     Map.to_streamlit(height=400)
+
+        # Example image to export (replace with your actual NDVI/LST computation)
+    image = ee.Image("MODIS/006/MOD13A1").select("NDVI").first()
+
+    # Set export region (you can refine it to the country bounds)
+    region = filtered.geometry()
+
+    # Export to Google Drive
+    if st.button("Export to Drive"):
+        task = ee.batch.Export.image.toDrive(
+            image=image,
+            description='GES_Export_Image',
+            folder='EarthEngineExports',
+            fileNamePrefix='GES_Result',
+            region=region,
+            scale=500,
+            maxPixels=1e13
+        )
+        task.start()
+        st.success("Export task started! Check your Google Drive shortly.")
+
     st.markdown('</div>', unsafe_allow_html=True)
         
