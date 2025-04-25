@@ -61,7 +61,7 @@ with col1:
         task.start()
         st.success(f"Export task started for {country} NDVI ({start_date} to {end_date})")
     
-    if st.button("Export NDVI to Google Drive"):
+    if st.button("Export to Drive"):
         export_ndvi_to_drive()
     
     st.markdown('</div>', unsafe_allow_html=True)
