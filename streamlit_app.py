@@ -88,7 +88,7 @@ with col2:
     Map.addLayer(filtered, {}, country)
     Map.centerObject(filtered)
 
-    Map.to_streamlit(height=400)
+    Map.to_streamlit(height=600)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
