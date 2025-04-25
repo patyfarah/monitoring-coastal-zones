@@ -35,9 +35,9 @@ with col1:
     st.markdown("**Year Range**")
     year_col1, year_col2 = st.columns(2)
     with year_col1:
-        start_year_val = st.number_input("Start", value=1984, key="start_year")
+        start_year_val = st.number_input("Start", value=2002, key="start_year")
     with year_col2:
-        end_year_val = st.number_input("End", value=2025, key="end_year")
+        end_year_val = st.number_input("End", value=2022, key="end_year")
 
     start_date = f"{int(start_year_val)}-01-01"
     end_date = f"{int(end_year_val)}-12-31"
@@ -64,17 +64,17 @@ with col2:
         "MOD13A1": ee.ImageCollection("MODIS/061/MOD13A1").select("NDVI")
     }
 
-    ndvi = (
+    NDVI = (
         ndvi_collections[ndvi_product]
         .filterBounds(filtered)
         .filterDate(start_date, end_date)
     )
 
     lst_collections = {
-        "MOD11A1": ee.ImageCollection("MODIS/061/MOD11A1").select("lst")
+        "MOD11A1": ee.ImageCollection("MODIS/061/MOD11A1").select("LST")
     }
 
-    lst = (
+    LST = (
         lst_collections[lst_product]
         .filterBounds(filtered)
         .filterDate(start_date, end_date)
