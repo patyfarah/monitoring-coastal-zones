@@ -42,6 +42,10 @@ with col1:
     with year_col2:
         end_year = st.number_input("End", value=2025, key="end_year")
 
+    # --- Define date range ---
+    start_year = f"{start_year}-01-01"
+    end_year = f"{end_year}-12-31"
+
     # Coastal buffer input
     buffer_km = st.number_input("Coastal Buffer (km)", min_value=0, max_value=100, value=10)
 
@@ -69,32 +73,45 @@ with col2:
     countries = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017")
     filtered = countries.filter(ee.Filter.eq('country_na', country))
 
+    # --- Load NDVI image collection based on selected product ---
+    ndvi_collections = {
+        "MOD13Q1": ee.ImageCollection("MODIS/006/MOD13Q1").select("NDVI"),
+        "COPERNICUS/S2_NDVI": ee.ImageCollection("COPERNICUS/S2_SR")
+                                 .map(lambda img: img.normalizedDifference(["B8", "B4"]).rename("NDVI"))
+    }
+
+    ndvi = ndvi_collections[ndvi_product] \
+    .filterBounds(country) \
+    .filterDate(start_date, end_date)
+
+    ndvi_mean = ndvi.mean().clip(country)
+    
     # Add layer
+    Map.addLayer(ndvi.mean().clip(country), {'min': 0, 'max': 9000, 'palette': ['white', 'green']}, 'Mean NDVI')
     Map.addLayer(filtered, {}, country)
     Map.centerObject(filtered)
 
     # Display map
     Map.to_streamlit(height=400)
 
-        # Example image to export (replace with your actual NDVI/LST computation)
-    image = ee.Image("MODIS/006/MOD13A1").select("NDVI").first()
+   # --- Export function ---
+def export_ndvi_to_drive(_):
+    task = ee.batch.Export.image.toDrive(
+        image=ndvi_mean,
+        description=f'{country_name}_NDVI_{start_year}_{end_year}',
+        folder='EarthEngine',
+        fileNamePrefix=f'{country_name}_NDVI_{start_year}_{end_year}',
+        region=country,
+        scale=250,  # adjust according to product resolution
+        maxPixels=1e13
+    )
+    task.start()
+    print(f"Export task started for {country_name} NDVI ({start_year}-{end_year}) to Google Drive.")
 
-    # Set export region (you can refine it to the country bounds)
-    region = filtered.geometry()
-
-    # Export to Google Drive
-    if st.button("Export to Drive"):
-        task = ee.batch.Export.image.toDrive(
-            image=image,
-            description='GES_Export_Image',
-            folder='EarthEngineExports',
-            fileNamePrefix='GES_Result',
-            region=region,
-            scale=500,
-            maxPixels=1e13
-        )
-        task.start()
-        st.success("Export task started! Check your Google Drive shortly.")
+    # --- Export button ---
+    export_button = widgets.Button(description="Export NDVI to Drive")
+    export_button.on_click(export_ndvi_to_drive)
+    display(export_button)
 
     st.markdown('</div>', unsafe_allow_html=True)
         
