@@ -70,8 +70,8 @@ with col2:
         .filterDate(start_date, end_date)
     )
 
-        ndvi_collections = {
-        "MOD13A1": ee.ImageCollection("MODIS/061/MOD13A1").select("NDVI")
+    lst_collections = {
+        "MOD11A1": ee.ImageCollection("MODIS/061/MOD11A1").select("lst")
     }
 
     lst = (
