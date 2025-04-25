@@ -47,7 +47,7 @@ with col1:
     # Filter country geometry
     countries = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017")
     filtered = countries.filter(ee.Filter.eq('country_na', country))
-    coastline = filtered.geometry().boundary()
+    coastline = filtered.boundary()
     buffered = coastline.buffer(buffer_km * 1000) 
     inland_band = buffered.intersection(country.geometry())
     
