@@ -73,7 +73,9 @@ with col1:
     ndvi_mean = ndvi.mean().clip(filtered)
     lst_mean = lst.mean().clip(filtered)
 
-   
+   # Define region of interest
+    region = image.geometry()
+    
     # Export function and button
     def export_ndvi_to_drive():
         task = ee.batch.Export.image.toDrive(
@@ -81,7 +83,7 @@ with col1:
             description=f'{country}_NDVI_{start_date}_{end_date}',
             folder='earthengine',
             fileNamePrefix=f'{country}_NDVI_{start_date}_{end_date}',
-            region= filtered.geometry(),
+            region= region,
             scale=250,
             maxPixels=1e13
         )
