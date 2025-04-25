@@ -47,23 +47,6 @@ with col1:
     ndvi_product = st.selectbox("NDVI Product", options=["MOD13A1"])
     lst_product = st.selectbox("LST Product", options=["MOD11A1"])
 
-
-    if st.button("Export to Drive"):
-        export_ndvi_to_drive()
-    
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# Right Panel
-with col2:
-    st.subheader("Good Environmental Status")
-    st.markdown('<div class="right-column">', unsafe_allow_html=True)
-
-    Map = geemap.Map(center=[33.89, 35.5], zoom=6, draw_ctrl=False, data_ctrl=False, toolbar_ctrl=False)
-
-    # Filter country geometry
-    countries = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017")
-    filtered = countries.filter(ee.Filter.eq('country_na', country))
-
     ndvi_collections = {
         "MOD13A1": ee.ImageCollection("MODIS/061/MOD13A1").select("NDVI")
     }
@@ -86,6 +69,39 @@ with col2:
     ndvi_mean = ndvi.mean().clip(filtered)
     lst_mean = lst.mean().clip(filtered)
 
+    # Export function and button
+    def export_ndvi_to_drive():
+        task = ee.batch.Export.image.toDrive(
+            image=ndvi_mean,
+            description=f'{country}_NDVI_{start_date}_{end_date}',
+            folder='EarthEngine',
+            fileNamePrefix=f'{country}_NDVI_{start_date}_{end_date}',
+            region=filtered,
+            scale=250,
+            maxPixels=1e13
+        )
+        task.start()
+        st.success(f"Export task started for {country} NDVI ({start_date} to {end_date})")
+        
+    
+    if st.button("Export to Drive"):
+        export_ndvi_to_drive()
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# Right Panel
+with col2:
+    st.subheader("Good Environmental Status")
+    st.markdown('<div class="right-column">', unsafe_allow_html=True)
+
+    Map = geemap.Map(center=[33.89, 35.5], zoom=6, draw_ctrl=False, data_ctrl=False, toolbar_ctrl=False)
+
+    # Filter country geometry
+    countries = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017")
+    filtered = countries.filter(ee.Filter.eq('country_na', country))
+
+
+
     # Add layers
     Map.addLayer(ndvi_mean, {'min': 0, 'max': 9000, 'palette': ['white', 'green']}, 'Mean NDVI',shown=False)
     Map.addLayer(lst_mean, {'min': 0, 'max': 9000, 'palette': ['white', 'red']}, 'Mean LST',shown=False)
@@ -100,16 +116,4 @@ with col2:
     Map.to_streamlit(height=500)
 
     st.markdown('</div>', unsafe_allow_html=True)
-    # Export function and button
-    def export_ndvi_to_drive():
-        task = ee.batch.Export.image.toDrive(
-            image=ndvi_mean,
-            description=f'{country}_NDVI_{start_date}_{end_date}',
-            folder='EarthEngine',
-            fileNamePrefix=f'{country}_NDVI_{start_date}_{end_date}',
-            region=filtered,
-            scale=250,
-            maxPixels=1e13
-        )
-        task.start()
-        st.success(f"Export task started for {country} NDVI ({start_date} to {end_date})")
+
