@@ -53,7 +53,7 @@ with col1:
     st.markdown("**Satellite Product**")
     ndvi_product = st.selectbox(
         label="",  # No label inside the selectbox
-        options=["MOD13A1","COPERNICUS/S2_NDVI"]
+        options=["MOD13A1"]
     )
     lst_product = st.selectbox(
     label="",  # No label inside the selectbox
@@ -75,9 +75,7 @@ with col2:
 
     # --- Load NDVI image collection based on selected product ---
     ndvi_collections = {
-        "MOD13Q1": ee.ImageCollection("MODIS/006/MOD13Q1").select("NDVI"),
-        "COPERNICUS/S2_NDVI": ee.ImageCollection("COPERNICUS/S2_SR")
-                                 .map(lambda img: img.normalizedDifference(["B8", "B4"]).rename("NDVI"))
+        "MOD13A1": ee.ImageCollection("MODIS/061/MOD13A1").select("NDVI")
     }
 
     ndvi = ndvi_collections[ndvi_product] \
