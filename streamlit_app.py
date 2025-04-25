@@ -95,21 +95,22 @@ with col2:
 
     Map.to_streamlit(height=500)
 
+   
+
+    # Export function and button
+    def export_ndvi_to_drive():
+        task = ee.batch.Export.image.toDrive(
+            image=ndvi_mean,
+            description=f'{country}_NDVI_{start_date}_{end_date}',
+            folder='EarthEngine',
+            fileNamePrefix=f'{country}_NDVI_{start_date}_{end_date}',
+            region=filtered.geometry().bounds().getInfo()['coordinates'],
+            scale=250,
+            maxPixels=1e13
+        )
+        task.start()
+        st.success(f"Export task started for {country} NDVI ({start_date} to {end_date})")
+    
+    if st.button("Export NDVI to Google Drive"):
+        export_ndvi_to_drive()
     st.markdown('</div>', unsafe_allow_html=True)
-
-# Export function and button
-def export_ndvi_to_drive():
-    task = ee.batch.Export.image.toDrive(
-        image=ndvi_mean,
-        description=f'{country}_NDVI_{start_date}_{end_date}',
-        folder='EarthEngine',
-        fileNamePrefix=f'{country}_NDVI_{start_date}_{end_date}',
-        region=filtered.geometry().bounds().getInfo()['coordinates'],
-        scale=250,
-        maxPixels=1e13
-    )
-    task.start()
-    st.success(f"Export task started for {country} NDVI ({start_date} to {end_date})")
-
-if st.button("Export NDVI to Google Drive"):
-    export_ndvi_to_drive()
