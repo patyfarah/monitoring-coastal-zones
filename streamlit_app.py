@@ -54,7 +54,7 @@ with col1:
             description=f'{country}_NDVI_{start_date}_{end_date}',
             folder='EarthEngine',
             fileNamePrefix=f'{country}_NDVI_{start_date}_{end_date}',
-            region=filtered.geometry().bounds().getInfo()['coordinates'],
+            region=filtered,
             scale=250,
             maxPixels=1e13
         )
