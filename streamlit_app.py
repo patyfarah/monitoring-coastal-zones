@@ -44,6 +44,10 @@ with col1:
 
     buffer_km = st.number_input("Coastal Buffer (km)", min_value=0, max_value=100, value=10)
 
+    # Filter country geometry
+    countries = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017")
+    filtered = countries.filter(ee.Filter.eq('country_na', country))
+    
     ndvi_product = st.selectbox("NDVI Product", options=["MOD13A1"])
     lst_product = st.selectbox("LST Product", options=["MOD11A1"])
 
@@ -69,10 +73,7 @@ with col1:
     ndvi_mean = ndvi.mean().clip(filtered)
     lst_mean = lst.mean().clip(filtered)
 
-    # Filter country geometry
-    countries = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017")
-    filtered = countries.filter(ee.Filter.eq('country_na', country))
-    
+   
     # Export function and button
     def export_ndvi_to_drive():
         task = ee.batch.Export.image.toDrive(
