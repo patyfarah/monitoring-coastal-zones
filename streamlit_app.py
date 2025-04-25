@@ -44,8 +44,8 @@ with col1:
 
     buffer_km = st.number_input("Coastal Buffer (km)", min_value=0, max_value=100, value=10)
 
-    ndvi_product = st.selectbox("Satellite Product", options=["MOD13A1"])
-    lst_product = st.selectbox("", options=["MOD11A1"])
+    ndvi_product = st.selectbox("NDVI Product", options=["MOD13A1"])
+    lst_product = st.selectbox("LST Product", options=["MOD11A1"])
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -70,10 +70,21 @@ with col2:
         .filterDate(start_date, end_date)
     )
 
-    ndvi_mean = ndvi.mean().clip(filtered)
+        ndvi_collections = {
+        "MOD13A1": ee.ImageCollection("MODIS/061/MOD13A1").select("NDVI")
+    }
+
+    lst = (
+        lst_collections[lst_product]
+        .filterBounds(filtered)
+        .filterDate(start_date, end_date)
+    )
+
+    lst_mean = lst.mean().clip(filtered)
 
     # Add layers
     Map.addLayer(ndvi_mean, {'min': 0, 'max': 9000, 'palette': ['white', 'green']}, 'Mean NDVI')
+    Map.addLayer(lst_mean, {'min': 0, 'max': 9000, 'palette': ['white', 'red']}, 'Mean LST')
     Map.addLayer(filtered, {}, country)
     Map.centerObject(filtered)
 
