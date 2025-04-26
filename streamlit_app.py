@@ -75,7 +75,7 @@ def mask_lst(image):
 
 def mask_ndvi(image):
     qa = image.select('SummaryQA')
-    good = qa.lte(1)
+    good = qa.eq(0)
     return image.updateMask(good)
 
 def get_image_collection(collection_dict, product, region, start_date, end_date, mask_func=None):
