@@ -154,7 +154,7 @@ with col2:
     "width": 2
     }), {}, f"{country} Border")
 
-
+    Map.centerObject(filtered)
     Map.to_streamlit(height=500)
 
     st.markdown('</div>', unsafe_allow_html=True)
