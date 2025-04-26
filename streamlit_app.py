@@ -70,14 +70,14 @@ ndviVis = {
 def mask_lst(image):
     qc = image.select('QC_Day')
     good = qc.eq(0)  # Good quality pixels only
-    lst = image.select('LST_Day_1km').multiply(0.02).subtract(273.15)  # Scale LST
+    lst = good.select('LST_Day_1km').multiply(0.02).subtract(273.15)  # Scale LST
     return lst.updateMask(good)
 
 
 def mask_ndvi(image):
     qa = image.select('SummaryQA')
     good = qa.lte(1)  # Good or marginal pixels
-    ndvi = image.select('NDVI').multiply(0.0001)  # SCALE NDVI
+    ndvi = good.select('NDVI').multiply(0.0001)  # SCALE NDVI
     return ndvi.updateMask(good)
 
 def get_image_collection(collection_dict, product, region, start_date, end_date, mask_func):
