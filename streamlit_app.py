@@ -128,13 +128,16 @@ with col1:
     
     ndvi_product = st.selectbox("NDVI Product", options=["MOD13A1"])
     lst_product = st.selectbox("LST Product", options=["MOD11A1"])
-
+    
+   # Define region of interest
+    region = filtered.geometry()  
+    
     ndvi = get_image_collection(
-        NDVI_PRODUCTS, ndvi_product, filtered, start_date, end_date, mask_func=mask_ndvi
+        NDVI_PRODUCTS, ndvi_product, region, start_date, end_date, mask_func=mask_ndvi
     )
     
     lst = get_image_collection(
-        LST_PRODUCTS, lst_product, filtered, start_date, end_date, mask_func=mask_lst
+        LST_PRODUCTS, lst_product, region, start_date, end_date, mask_func=mask_lst
     )
     
     ndvi_mean = ndvi.mean().clip(outer_band)
@@ -146,8 +149,7 @@ with col1:
     
     lst_mean = modcel.mean().clip(outer_band)
 
-   # Define region of interest
-    region = filtered.geometry()     
+  
     
     if st.button("Export to Drive"):
         export_ndvi_to_drive()
