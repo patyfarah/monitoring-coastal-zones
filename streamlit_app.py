@@ -5,11 +5,23 @@ from google.oauth2 import service_account
 import matplotlib.pyplot as plt
 import datetime
 
+
+# -----------------------
+# Initialization
+# -----------------------
+SCOPES = ['https://www.googleapis.com/auth/earthengine']
+def initialize_ee():
+    service_account_info = dict(st.secrets["earthengine"])
+    credentials = service_account.Credentials.from_service_account_info(
+        service_account_info, scopes=SCOPES)
+    ee.Initialize(credentials)
+
+
 # -----------------------
 # Constants and Settings
 # -----------------------
 
-SCOPES = ['https://www.googleapis.com/auth/earthengine']
+
 COUNTRIES = [
     "Morocco", "Algeria", "Tunisia", "Libya", "Arab Republic of Egypt",
     "Syrian Arab Republic", "Lebanon", "Yemen", "Mauritania"
@@ -39,15 +51,7 @@ LST_VIS = {
     ]
 }
 
-# -----------------------
-# Initialization
-# -----------------------
 
-def initialize_ee():
-    service_account_info = dict(st.secrets["earthengine"])
-    credentials = service_account.Credentials.from_service_account_info(
-        service_account_info, scopes=SCOPES)
-    ee.Initialize(credentials)
 
 # -----------------------
 # Helper Functions
