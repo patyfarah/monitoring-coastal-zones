@@ -196,9 +196,9 @@ with col2:
     Map.centerObject(filtered)
     Map.to_streamlit(height=500)
 
-    stats = lst_image.reduceRegion(
+    stats = lst_mean.reduceRegion(
         reducer=ee.Reducer.minMax(),
-        geometry=lst_image.geometry(),
+        geometry=lst_mean.geometry(),
         scale=1000,
         maxPixels=1e13
     ).getInfo()
