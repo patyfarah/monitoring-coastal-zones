@@ -1,30 +1,10 @@
-import streamlit as st
-import ee
-import geemap.foliumap as geemap
-from google.oauth2 import service_account
-import matplotlib.pyplot as plt
-import datetime
-
-
-# -----------------------
-# Initialization
-# -----------------------
 SCOPES = ['https://www.googleapis.com/auth/earthengine']
-def initialize_ee():
-    service_account_info = dict(st.secrets["earthengine"])
-    credentials = service_account.Credentials.from_service_account_info(
-        service_account_info, scopes=SCOPES)
-    ee.Initialize(credentials)
-
-# -----------------------
-# Constants and Settings
-# -----------------------
-
-
 COUNTRIES = [
     "Morocco", "Algeria", "Tunisia", "Libya", "Arab Republic of Egypt",
     "Syrian Arab Republic", "Lebanon", "Yemen", "Mauritania"
 ]
+NDVI_PRODUCTS = {"MOD13A1": ee.ImageCollection("MODIS/061/MOD13A1").select("NDVI")}
+LST_PRODUCTS = {"MOD11A1": ee.ImageCollection("MODIS/061/MOD11A1").select("LST_Day_1km")}
 
 NDVI_VIS = {
     'min': 0,
@@ -48,7 +28,15 @@ LST_VIS = {
     ]
 }
 
+# -----------------------
+# Initialization
+# -----------------------
 
+def initialize_ee():
+    service_account_info = dict(st.secrets["earthengine"])
+    credentials = service_account.Credentials.from_service_account_info(
+        service_account_info, scopes=SCOPES)
+    ee.Initialize(credentials)
 
 # -----------------------
 # Helper Functions
@@ -63,16 +51,19 @@ def filter_country(country_name, buffer_km):
     return filtered, region_geom, outer_band
 
 def mask_lst(image):
+    """Mask cloudy pixels based on QC_Day band."""
     qc = image.select('QC_Day')
-    good = qc.eq(0)
+    good = qc.eq(0)  # QC_Day == 0 means "good quality"
     return image.updateMask(good)
 
 def mask_ndvi(image):
+    """Mask cloudy pixels based on pixel reliability."""
+    # In MOD13A1, 'SummaryQA' can be used for quality
     qa = image.select('SummaryQA')
-    good = qa.lte(1)
+    good = qa.lte(1)  # 0 = Good, 1 = Marginal
     return image.updateMask(good)
 
-def get_image_collection(collection_dict, product, region, start_date, end_date, mask_func=None):
+def get_image_collection(collection_dict, product, region, start_date, end_date,mask_func=None):
     collection = (
         collection_dict[product]
         .filterBounds(region)
@@ -82,38 +73,32 @@ def get_image_collection(collection_dict, product, region, start_date, end_date,
         collection = collection.map(mask_func)
     return collection
 
+
 def export_to_drive(image, description, region):
     task = ee.batch.Export.image.toDrive(
         image=image,
         description=description,
         folder='earthengine',
         fileNamePrefix=description,
-        region=region.bounds(),
+        region=region.bounds().getInfo()['coordinates'],
         scale=250,
         fileFormat='GeoTIFF'
     )
     task.start()
     return task.status()
 
-def create_map(filtered, ndvi_mean, lst_mean, selected_layers):
-    Map = geemap.Map(zoom=6, draw_ctrl=True)
-
-    if "Mean NDVI" in selected_layers:
-        Map.addLayer(ndvi_mean, NDVI_VIS, 'Mean NDVI', shown=True)
-        Map.add_colorbar(NDVI_VIS, label="NDVI", layer_name="Mean NDVI", orientation="vertical")
-
-    if "Mean LST" in selected_layers:
-        Map.addLayer(lst_mean, LST_VIS, 'Mean LST', shown=True)
-        Map.add_colorbar(LST_VIS, label="LST (°C)", layer_name="Mean LST", orientation="vertical")
-
+def create_map(filtered, ndvi_mean, lst_mean):
+    Map = geemap.Map(zoom=6, draw_ctrl=False)
+    Map.addLayer(ndvi_mean, NDVI_VIS, 'Mean NDVI', shown=False)
+    Map.addLayer(lst_mean, LST_VIS, 'Mean LST', shown=False)
     Map.addLayer(filtered.style(**{
         "color": "black",
         "fillColor": "00000000",
         "width": 2
     }), {}, "Country Border")
-
     Map.centerObject(filtered)
     return Map
+
 
 # -----------------------
 # Main App
@@ -125,6 +110,7 @@ def main():
 
     col1, col2 = st.columns([1, 3])
 
+    # Left Panel
     with col1:
         st.subheader("Parameters")
         st.markdown('<div class="left-column">', unsafe_allow_html=True)
@@ -141,32 +127,76 @@ def main():
 
         buffer_km = st.number_input("Coastal Buffer (km)", min_value=0, max_value=100, value=10)
 
-        filtered, region_geom, outer_band = filter_country(country, buffer_km)
-
-        NDVI_PRODUCTS = {"MOD13A1": ee.ImageCollection("MODIS/061/MOD13A1").select("NDVI")}
-        LST_PRODUCTS = {"MOD11A1": ee.ImageCollection("MODIS/061/MOD11A1").select("LST_Day_1km")}
-
         ndvi_product = st.selectbox("NDVI Product", options=list(NDVI_PRODUCTS.keys()))
         lst_product = st.selectbox("LST Product", options=list(LST_PRODUCTS.keys()))
 
-        
+        filtered, region_geom, outer_band = filter_country(country, buffer_km)
+
         ndvi = get_image_collection(
-            NDVI_PRODUCTS, ndvi_product, filtered, start_date, end_date, mask_func=mask_ndvi
+            NDVI_PRODUCTS, ndvi_product, filtered, start_date, end_date,mask_func=mask_ndvi
+        )
+        
+        lst = get_image_collection(
+            LST_PRODUCTS, lst_product, filtered, start_date, end_date,mask_func=mask_lst
         )
 
-        lst = get_image_collection(
-            LST_PRODUCTS, lst_product, filtered, start_date, end_date, mask_func=mask_lst
-        )
 
         ndvi_mean = ndvi.mean().clip(outer_band)
+        # Rescale and convert LST to Celsius
+        #lst_mean = lst.mean().multiply(0.02).subtract(273.15).clip(outer_band)
 
+        # Kelvin to Celsius
         modcel = lst.map(lambda img: img
-                         .multiply(0.02)
-                         .subtract(273.15)
-                         .copyProperties(img, ['system:time_start']))
+                           .multiply(0.02)
+                           .subtract(273.15)
+                           .copyProperties(img, ['system:time_start']))
+
+        # If user drew features (you should replace Map.user_drawn_features with your source of drawn features)
+        if Map.user_drawn_features:
+            for feature in Map.user_drawn_features['features']:
+                if feature['geometry']['type'] == 'Polygon':
+                    smallArea = ee.Geometry.Polygon(feature['geometry']['coordinates'])
+                    
+        def sample_mean(img):
+            mean_dict = img.reduceRegion(
+                reducer=ee.Reducer.mean(),
+                geometry=smallArea,
+                scale=1000,
+                bestEffort=True
+            )
+            return ee.Feature(None, {
+                'mean_LST': mean_dict.get('LST_Day_1km'),  # Change to your correct band name
+                'time': img.get('system:time_start')
+            })
+        # Map the function over the collection
+        lst_features = modcel.map(sample_mean).filter(
+            ee.Filter.notNull(['mean_LST'])  # Remove empty results
+        )
+        
+        # Convert to a FeatureCollection
+        lst_fc = ee.FeatureCollection(lst_features)
+        
+        # Get the data to plot
+        lst_dict = lst_fc.aggregate_array('mean_LST').getInfo()
+        time_stamps = lst_fc.aggregate_array('time').getInfo()
+        
+        # Convert timestamps to human dates
+        import datetime
+        dates = [datetime.datetime.utcfromtimestamp(t / 1000) for t in time_stamps]
+        
+        # Plot
+        plt.figure(figsize=(10, 5))
+        plt.plot(dates, lst_dict, marker='o')
+        plt.title('LST Temporal Analysis')
+        plt.xlabel('Date')
+        plt.ylabel('LST (°C)')
+        plt.grid(True)
+        plt.show()
+
 
         lst_mean = modcel.mean().clip(outer_band)
 
+        # Export button
         if st.button("Export to Drive"):
             status = export_to_drive(
                 image=ndvi_mean,
@@ -174,27 +204,21 @@ def main():
                 region=region_geom
             )
             if status['state'] == 'READY':
-                st.success("Export task started! Check Earth Engine Tasks.")
+                st.success("Export task started! Check Google Earth Engine tasks.")
             else:
-                st.error(f"Export failed to start: {status}")
+                st.error(f"Export failed to start. Reason: {status}")
 
         st.markdown('</div>', unsafe_allow_html=True)
 
+    # Right Panel
     with col2:
         st.subheader("Good Environmental Status")
         st.markdown('<div class="right-column">', unsafe_allow_html=True)
 
-        selected_layers = st.multiselect(
-            "Select Layers to Display",
-            ["Mean NDVI", "Mean LST"],
-            default=["Mean NDVI", "Mean LST"]
-        )
-
-        Map = create_map(filtered, ndvi_mean, lst_mean, selected_layers)
+        Map = create_map(filtered, ndvi_mean, lst_mean)
         Map.to_streamlit(height=500)
-
         st.markdown('</div>', unsafe_allow_html=True)
-
-
+    
+      
 if __name__ == "__main__":
     main()
