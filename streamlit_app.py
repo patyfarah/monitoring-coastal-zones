@@ -1,3 +1,13 @@
+import streamlit as st
+import ee
+import geemap.foliumap as geemap
+from google.oauth2 import service_account
+import matplotlib.pyplot as plt
+
+# -----------------------
+# Constants and Settings
+# -----------------------
+
 SCOPES = ['https://www.googleapis.com/auth/earthengine']
 COUNTRIES = [
     "Morocco", "Algeria", "Tunisia", "Libya", "Arab Republic of Egypt",
