@@ -50,7 +50,7 @@ with col1:
     filtered = countries.filter(ee.Filter.eq('country_na', country))
     region_geom = filtered.geometry()
     buffered = region_geom.buffer(-buffer_km * 1000)
-    outer_band =buffered.difference(filtered)
+    outer_band =filtered.difference(buffered)
     
     ndvi_product = st.selectbox("NDVI Product", options=["MOD13A1"])
     lst_product = st.selectbox("LST Product", options=["MOD11A1"])
