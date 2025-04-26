@@ -2,6 +2,7 @@ import streamlit as st
 import ee
 import geemap.foliumap as geemap
 from google.oauth2 import service_account
+import matplotlib.pyplot as plt
 
 # -----------------------
 # Constants and Settings
@@ -166,17 +167,42 @@ def main():
                 if feature['geometry']['type'] == 'Polygon':
                     smallArea = ee.Geometry.Polygon(feature['geometry']['coordinates'])
                     
-        # Chart of LST TEMPORAL ANALYSIS
-        tsc = ui.Chart.image.series(
-            image_collection=modcel,
-            region=smallArea,
-            reducer=ee.Reducer.mean(),
-            scale=1000,
-            x_property='system:time_start'
-        ).setOptions({
-            'title': 'LST Temporal Analysis',
-            'vAxis': {'title': 'LST Celsius'}
-        })
+        def sample_mean(img):
+            mean_dict = img.reduceRegion(
+                reducer=ee.Reducer.mean(),
+                geometry=smallArea,
+                scale=1000,
+                bestEffort=True
+            )
+            return ee.Feature(None, {
+                'mean_LST': mean_dict.get('LST_Day_1km'),  # Change to your correct band name
+                'time': img.get('system:time_start')
+            })
+        # Map the function over the collection
+        lst_features = modcel.map(sample_mean).filter(
+            ee.Filter.notNull(['mean_LST'])  # Remove empty results
+        )
+        
+        # Convert to a FeatureCollection
+        lst_fc = ee.FeatureCollection(lst_features)
+        
+        # Get the data to plot
+        lst_dict = lst_fc.aggregate_array('mean_LST').getInfo()
+        time_stamps = lst_fc.aggregate_array('time').getInfo()
+        
+        # Convert timestamps to human dates
+        import datetime
+        dates = [datetime.datetime.utcfromtimestamp(t / 1000) for t in time_stamps]
+        
+        # Plot
+        plt.figure(figsize=(10, 5))
+        plt.plot(dates, lst_dict, marker='o')
+        plt.title('LST Temporal Analysis')
+        plt.xlabel('Date')
+        plt.ylabel('LST (°C)')
+        plt.grid(True)
+        plt.show()
+
 
         lst_mean = modcel.mean().clip(outer_band)
 
