@@ -69,8 +69,10 @@ ndviVis = {
 # Mask free cloud
 def mask_lst(image):
     qc = image.select('QC_Day')
-    good = qc.eq(0)
-    return image.updateMask(good)
+    good = qc.eq(0)  # Good quality pixels only
+    lst = image.select('LST_Day_1km').multiply(0.02).subtract(273.15)  # Scale LST
+    return lst.updateMask(good)
+
 
 def mask_ndvi(image):
     qa = image.select('SummaryQA')
@@ -134,7 +136,7 @@ with col1:
     region = filtered.geometry()  
     
     NDVI_PRODUCTS = {"MOD13A1": ee.ImageCollection("MODIS/061/MOD13A1")}
-    LST_PRODUCTS = {"MOD11A1": ee.ImageCollection("MODIS/061/MOD11A1").select("LST_Day_1km")}
+    LST_PRODUCTS = {"MOD11A1": ee.ImageCollection("MODIS/061/MOD11A1")}
     
     ndvi = get_image_collection(
         NDVI_PRODUCTS, ndvi_product, region, start_date, end_date, mask_ndvi
