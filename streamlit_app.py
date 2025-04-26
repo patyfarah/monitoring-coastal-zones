@@ -108,50 +108,6 @@ def create_map(filtered, ndvi_mean, lst_mean):
     Map.centerObject(filtered)
     return Map
 
-def get_yearly_time_series(collection, region, band_name):
-    """Extract yearly mean time series over a region for a given image collection."""
-    def compute_mean(img):
-        mean = img.reduceRegion(
-            reducer=ee.Reducer.mean(),
-            geometry=region,
-            scale=500,
-            maxPixels=1e9
-        )
-        return ee.Feature(None, {
-            'date': img.date().format('YYYY'),  # Only year!
-            'mean': mean.get(band_name)
-        })
-
-    features = collection.map(compute_mean).filter(
-        ee.Filter.notNull(['mean'])
-    ).aggregate_array('features')
-
-    features_list = features.getInfo()
-    year_means = {}
-
-    for feat in features_list:
-        props = feat['properties']
-        year = props['date']
-        value = props['mean']
-        if year in year_means:
-            year_means[year].append(value)
-        else:
-            year_means[year] = [value]
-
-    # Aggregate: mean per year
-    years = []
-    means = []
-    for year, values in year_means.items():
-        years.append(int(year))
-        means.append(sum(values) / len(values))
-
-    df = pd.DataFrame({
-        'Year': years,
-        'Mean Value': means
-    }).sort_values('Year')
-    
-    return df
-
 
 # -----------------------
 # Main App
@@ -220,20 +176,8 @@ def main():
 
         Map = create_map(filtered, ndvi_mean, lst_mean)
         Map.to_streamlit(height=500)
-        ndvi_ts = get_time_series(ndvi, region_geom, 'NDVI')
-        lst_ts = get_time_series(lst, region_geom, 'LST_Celsius')
-    
- 
-        # Yearly aggregated LST
-        lst_yearly = get_yearly_time_series(lst, region_geom, 'LST_Celsius')
-        
-        st.subheader("LST Yearly Mean (°C)")
-        st.line_chart(lst_yearly.rename(columns={"Mean Value": "LST (°C)"}).set_index('Year'))
-
         st.markdown('</div>', unsafe_allow_html=True)
-        
-        
-
-
+    
+      
 if __name__ == "__main__":
     main()
