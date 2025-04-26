@@ -104,6 +104,9 @@ def create_map(filtered, ndvi_mean, lst_mean):
         "width": 2
     }), {}, "Country Border")
     Map.centerObject(filtered)
+    Map.add_colorbar(
+        vis_params, label="LST (C)", layer_name="Mean LST", orientation="vertical"
+    )
     return Map
 
 # -----------------------
@@ -172,6 +175,7 @@ def main():
         st.markdown('<div class="right-column">', unsafe_allow_html=True)
 
         Map = create_map(filtered, ndvi_mean, lst_mean)
+ 
         Map.to_streamlit(height=500)
 
         st.markdown('</div>', unsafe_allow_html=True)
