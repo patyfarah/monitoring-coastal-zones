@@ -2,7 +2,7 @@ import streamlit as st
 import ee
 import json
 import geemap.foliumap as geemap  # Keep this for map creation
-from streamlit_folium import streamlit_folium  # Add this
+from geemap import streamlit_folium  # Add this
 from google.oauth2 import service_account
 import random
 
