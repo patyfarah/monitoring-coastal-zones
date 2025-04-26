@@ -3,8 +3,7 @@ import ee
 import json
 import geemap.foliumap as geemap
 from google.oauth2 import service_account
-import folium
-from streamlit_folium import st_folium
+
 
 # Load service account info from Streamlit secrets
 service_account_info = dict(st.secrets["earthengine"])
@@ -52,6 +51,7 @@ with col1:
     region_geom = filtered.geometry()
     buffered = region_geom.buffer(-buffer_km * 1000)
     inland_band = buffered.intersection(filtered)
+    outer_boundary = buffered.difference(inland_band)
     
     ndvi_product = st.selectbox("NDVI Product", options=["MOD13A1"])
     lst_product = st.selectbox("LST Product", options=["MOD11A1"])
@@ -75,8 +75,8 @@ with col1:
         .filterBounds(filtered)
         .filterDate(start_date, end_date)
     )
-    ndvi_mean = ndvi.mean().clip(filtered)
-    lst_mean = lst.mean().clip(filtered)
+    ndvi_mean = ndvi.mean().clip(outer_boundary)
+    lst_mean = lst.mean().clip(outer_boundary)
 
    # Define region of interest
     region = filtered.geometry()
@@ -112,7 +112,7 @@ with col2:
     st.markdown('<div class="right-column">', unsafe_allow_html=True)
       
     Map = geemap.Map(zoom=6, draw_ctrl=False)
-    st_folium(Map, key="unique_map_key_no_draw")
+    
     # Vis Param
     lstVis = {
       'min': 13000.0,
@@ -135,7 +135,6 @@ with col2:
         '012e01', '011d01', '011301'
       ],
     }
-
     
     # Add layers
     Map.addLayer(ndvi_mean, ndviVis, 'Mean NDVI',shown=False)
