@@ -73,17 +73,9 @@ vis_params = {
 }
 
 lst_params = {
-    'min': -5,         # Minimum temperature for color scale (°C)
-    'max': 45,          # Maximum temperature for color scale (°C)
-    'palette': [
-        'blue',         # Cold areas
-        'cyan',
-        'green',
-        'yellow',
-        'orange',
-        'red'           # Hot areas
-    ]
-}
+    'min': 0,    # 0°C
+    'max': 50,   # 50°C
+    'palette': ['blue', 'cyan', 'yellow', 'red']
 
 
 # Mask free cloud
@@ -196,19 +188,4 @@ with col2:
     Map.centerObject(filtered)
     Map.to_streamlit(height=500)
 
-    stats = lst_mean.reduceRegion(
-        reducer=ee.Reducer.minMax(),
-        geometry=lst_mean.geometry(),
-        scale=1000,
-        maxPixels=1e13
-    ).getInfo()
-    
-    min_val = stats['LST_Day_1km_min']
-    max_val = stats['LST_Day_1km_max']
-    
-    st.success(f"Detected LST range: {min_val:.2f}°C to {max_val:.2f}°C")
-
- # Show the message (if detected)
-    if st.session_state.success_message:
-        st.success(st.session_state.success_message)   
     st.markdown('</div>', unsafe_allow_html=True)
