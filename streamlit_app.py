@@ -136,7 +136,7 @@ with col2:
     # Add layers
     Map.addLayer(ndvi_mean, ndviVis, 'Mean NDVI',shown=False)
     Map.addLayer(lst_mean, lstVis, 'Mean LST',shown=False)
-    Map.addLayer(inland_band, {}, '10km inland zone')
+    Map.addLayer(inland_band, {}, '10km inland zone',shown=False)
     Map.addLayer(filtered.style(**{
     "color": "black",
     "fillColor": "00000000",  # Transparent fill
