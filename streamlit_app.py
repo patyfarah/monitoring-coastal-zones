@@ -73,9 +73,9 @@ with col1:
         lst_collections[lst_product]
         .filterBounds(filtered)
         .filterDate(start_date, end_date)
-        .map(lambda img: img.clip(outer_band))
     )
     ndvi_mean = ndvi.mean().clip(outer_band)
+    lst_mean = lst.mean().clip(outer_band)
     
 
    # Define region of interest
@@ -138,7 +138,7 @@ with col2:
     
     # Add layers
     Map.addLayer(ndvi_mean, ndviVis, 'Mean NDVI',shown=False)
-    Map.addLayer(lst, lstVis, 'Mean LST',shown=False)
+    Map.addLayer(lst_mean, lstVis, 'Mean LST',shown=False)
     Map.addLayer(filtered.style(**{
     "color": "black",
     "fillColor": "00000000",  # Transparent fill
