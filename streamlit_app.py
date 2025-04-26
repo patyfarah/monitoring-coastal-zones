@@ -112,7 +112,7 @@ with col2:
     random_key = random.randint(0, 100000)  # Force Streamlit to refresh the map widget
 
 
-    Map = geemap.Map(center=[33.89, 35.5], zoom=6,  key=f"map_{random_key}")
+    Map = geemap.Map(center=[33.89, 35.5], zoom=6, draw_ctrl=False,layer_ctrl=False,toolbar_ctrl=False,fullscreen_ctrl=False,latlng_popup=False key=f"map_{random_key}")
     # Vis Param
     lstVis = {
       'min': 13000.0,
