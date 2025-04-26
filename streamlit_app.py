@@ -72,13 +72,13 @@ def mask_ndvi(image):
     good = qa.lte(1)  # 0 = Good, 1 = Marginal
     return image.updateMask(good)
 
-def get_image_collection(collection_dict, product, region, start_date, end_date, apply_mask=False, mask_func=None):
+def get_image_collection(collection_dict, product, region, start_date, end_date,mask_func=None):
     collection = (
         collection_dict[product]
         .filterBounds(region)
         .filterDate(start_date, end_date)
     )
-    if apply_mask and mask_func:
+    if mask_func:
         collection = collection.map(mask_func)
     return collection
 
@@ -141,13 +141,11 @@ def main():
         filtered, region_geom, outer_band = filter_country(country, buffer_km)
 
         ndvi = get_image_collection(
-            NDVI_PRODUCTS, ndvi_product, filtered, start_date, end_date,
-            apply_mask=True, mask_func=mask_ndvi
+            NDVI_PRODUCTS, ndvi_product, filtered, start_date, end_date,mask_func=mask_ndvi
         )
         
         lst = get_image_collection(
-            LST_PRODUCTS, lst_product, filtered, start_date, end_date,
-            apply_mask=True, mask_func=mask_lst
+            LST_PRODUCTS, lst_product, filtered, start_date, end_date,mask_func=mask_lst
         )
 
 
