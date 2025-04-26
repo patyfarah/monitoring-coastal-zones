@@ -196,14 +196,17 @@ with col2:
     Map.centerObject(filtered)
     Map.to_streamlit(height=500)
 
-    # Example if using Earth Engine
-    stats = lst_mean.reduceRegion(
+    stats = lst_image.reduceRegion(
         reducer=ee.Reducer.minMax(),
-        geometry=lst_mean.geometry(),
+        geometry=lst_image.geometry(),
         scale=1000,
         maxPixels=1e13
-    )
-    print(stats.getInfo())
+    ).getInfo()
+    
+    min_val = stats['LST_Day_1km_min']
+    max_val = stats['LST_Day_1km_max']
+    
+    st.success(f"Detected LST range: {min_val:.2f}°C to {max_val:.2f}°C")
 
     
     st.markdown('</div>', unsafe_allow_html=True)
