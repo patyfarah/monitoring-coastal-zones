@@ -198,8 +198,8 @@ with col2:
     Map.to_streamlit(height=500)
 
     if st.button("Rebuild Map"):
-    Map = create_map(filtered, outer_band, ndvi_mean, lst_mean, country)
-    Map.to_streamlit(height=500)
+        Map = create_map(filtered, outer_band, ndvi_mean, lst_mean, country)
+        Map.to_streamlit(height=500)
 
 
     st.markdown('</div>', unsafe_allow_html=True)
