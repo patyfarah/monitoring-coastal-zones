@@ -166,15 +166,9 @@ with col1:
         LST_PRODUCTS, lst_product, region, start_date, end_date, mask_lst
     )
     
-    # Take the mean of the cleaned NDVI images
-    ndvi_mean = ndvi.mean().clip(outer_band)
-    
-    modcel = lst.map(lambda img: img
-                     .multiply(0.02)
-                     .subtract(273.15)
-                     .copyProperties(img, ['system:time_start']))
-    
-    lst_mean = modcel.mean().clip(outer_band)
+    # Mean data
+    ndvi_mean = ndvi.mean().clip(outer_band) 
+    lst_mean = lst.mean().clip(outer_band)
 
   
     
