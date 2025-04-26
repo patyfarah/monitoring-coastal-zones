@@ -152,8 +152,33 @@ def main():
 
         ndvi_mean = ndvi.mean().clip(outer_band)
         # Rescale and convert LST to Celsius
-        lst_mean = lst.mean().multiply(0.02).subtract(273.15).clip(outer_band)
+        #lst_mean = lst.mean().multiply(0.02).subtract(273.15).clip(outer_band)
 
+        # Kelvin to Celsius
+        modcel = lst.map(lambda img: img
+                           .multiply(0.02)
+                           .subtract(273.15)
+                           .copyProperties(img, ['system:time_start']))
+
+        # If user drew features (you should replace `Map.user_drawn_features` with your source of drawn features)
+        if Map.user_drawn_features:
+            for feature in Map.user_drawn_features['features']:
+                if feature['geometry']['type'] == 'Polygon':
+                    smallArea = ee.Geometry.Polygon(feature['geometry']['coordinates'])
+                    
+        # Chart of LST TEMPORAL ANALYSIS
+        tsc = ui.Chart.image.series(
+            image_collection=modcel,
+            region=smallArea,
+            reducer=ee.Reducer.mean(),
+            scale=1000,
+            x_property='system:time_start'
+        ).setOptions({
+            'title': 'LST Temporal Analysis',
+            'vAxis': {'title': 'LST Celsius'}
+        })
+
+        lst_mean = modcel.mean().clip(outer_band)
 
         # Export button
         if st.button("Export to Drive"):
