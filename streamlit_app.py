@@ -77,9 +77,9 @@ lst_params = {
     'max': 50,   # 50°C
     'palette': ['blue', 'cyan', 'yellow', 'red']
 
-def mask_lst(image):
+def mask_lst(image, valid_qc_values=[0,1,2]):
     qc = image.select('QC_Day')
-    good = qc.eq(0)  # Good quality pixels only
+    good = qc.arrayContains(valid_qc_values)
     lst = image.select('LST_Day_1km').multiply(0.02).subtract(273.15).copyProperties(image, ['system:time_start'])  # Scale LST
     return lst.updateMask(good)
 
