@@ -1,8 +1,7 @@
 import streamlit as st
 import ee
 import json
-import geemap.foliumap as geemap  # Keep this for map creation
-from streamlit_folium import streamlit_folium
+import geemap.foliumap as geemap
 from google.oauth2 import service_account
 import random
 
@@ -78,8 +77,10 @@ with col1:
     ndvi_mean = ndvi.mean().clip(filtered)
     lst_mean = lst.mean().clip(filtered)
 
+   # Define region of interest
     region = filtered.geometry()
-
+    
+    # Export function and button
     def export_ndvi_to_drive():
         task = ee.batch.Export.image.toDrive(
             image=ndvi_mean,
@@ -97,36 +98,29 @@ with col1:
             st.success("Export task started! Check Google Earth Engine tasks.")
         else:
             st.error(f"Export failed to start. Reason: {status}")
-
+       
+    
     if st.button("Export to Drive"):
         export_ndvi_to_drive()
-
+    
     st.markdown('</div>', unsafe_allow_html=True)
 
 # Right Panel
 with col2:
     st.subheader("Good Environmental Status")
     st.markdown('<div class="right-column">', unsafe_allow_html=True)
-    random_key = random.randint(0, 100000)
+    random_key = random.randint(0, 100000)  # Force Streamlit to refresh the map widget
 
+    # --- UI controls
     st.sidebar.header("Map Controls")
     
     draw_ctrl = st.sidebar.checkbox("Enable Drawing Tools", value=False)
     layer_ctrl = st.sidebar.checkbox("Enable Layer Control", value=True)
     latlng_popup = st.sidebar.checkbox("Show Lat/Lng on Click", value=False)
     fullscreen_ctrl = st.sidebar.checkbox("Fullscreen Button", value=False)
-
-    # Create the map
-    Map = geemap.Map(
-        zoom=6,
-        draw_ctrl=draw_ctrl,
-        layer_ctrl=layer_ctrl,
-        fullscreen_ctrl=fullscreen_ctrl,
-        latlng_popup=latlng_popup,
-        key=f"map_{random_key}"
-    )
-
-    # Visualization Parameters
+    
+    Map = geemap.Map(zoom=6, draw_ctrl=draw_ctrl,layer_ctrl=layer_ctrl,fullscreen_ctrl=fullscreen_ctrl,latlng_popup=latlng_popup, key=f"map_{random_key}")
+    # Vis Param
     lstVis = {
       'min': 13000.0,
       'max': 16500.0,
@@ -149,19 +143,18 @@ with col2:
       ],
     }
 
+    
     # Add layers
-    Map.addLayer(ndvi_mean, ndviVis, 'Mean NDVI', shown=False)
-    Map.addLayer(lst_mean, lstVis, 'Mean LST', shown=False)
-    Map.addLayer(inland_band, {}, '10km inland zone', shown=False)
+    Map.addLayer(ndvi_mean, ndviVis, 'Mean NDVI',shown=False)
+    Map.addLayer(lst_mean, lstVis, 'Mean LST',shown=False)
+    Map.addLayer(inland_band, {}, '10km inland zone',shown=False)
     Map.addLayer(filtered.style(**{
-        "color": "black",
-        "fillColor": "00000000",
-        "width": 2
+    "color": "black",
+    "fillColor": "00000000",  # Transparent fill
+    "width": 2
     }), {}, f"{country} Border")
 
     Map.centerObject(filtered)
-
-    # 👇 Replace Map.to_streamlit() with streamlit_folium
-    streamlit_folium(Map, height=500, key=f"map_widget_{random_key}")
+    Map.to_streamlit(height=500)
 
     st.markdown('</div>', unsafe_allow_html=True)
