@@ -73,8 +73,8 @@ vis_params = {
 }
 
 lst_params = {
-    'min': -10,         # Minimum temperature for color scale (°C)
-    'max': 50,          # Maximum temperature for color scale (°C)
+    'min': -23,         # Minimum temperature for color scale (°C)
+    'max': 57,          # Maximum temperature for color scale (°C)
     'palette': [
         'blue',         # Cold areas
         'cyan',
