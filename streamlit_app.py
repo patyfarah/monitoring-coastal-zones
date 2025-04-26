@@ -109,9 +109,9 @@ with col1:
 with col2:
     st.subheader("Good Environmental Status")
     st.markdown('<div class="right-column">', unsafe_allow_html=True)
-    st_folium(m, key="unique_map_key_no_draw")
-   
+      
     Map = geemap.Map(zoom=6, draw_ctrl=False")
+    st_folium(Map, key="unique_map_key_no_draw")
     # Vis Param
     lstVis = {
       'min': 13000.0,
