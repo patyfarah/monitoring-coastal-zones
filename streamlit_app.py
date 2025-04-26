@@ -174,39 +174,6 @@ def main():
         Map = create_map(filtered, ndvi_mean, lst_mean)
         Map.to_streamlit(height=500)
 
-        if Map.user_roi:
-            drawn_area = Map.user_roi
-
-            def sample_mean(img):
-                mean_dict = img.reduceRegion(
-                    reducer=ee.Reducer.mean(),
-                    geometry=drawn_area,
-                    scale=1000,
-                    bestEffort=True
-                )
-                return ee.Feature(None, {
-                    'mean_LST': mean_dict.get('LST_Day_1km'),
-                    'time': img.get('system:time_start')
-                })
-
-            lst_features = modcel.map(sample_mean).filter(
-                ee.Filter.notNull(['mean_LST'])
-            )
-
-            lst_fc = ee.FeatureCollection(lst_features)
-            lst_dict = lst_fc.aggregate_array('mean_LST').getInfo()
-            time_stamps = lst_fc.aggregate_array('time').getInfo()
-
-            dates = [datetime.datetime.utcfromtimestamp(t / 1000) for t in time_stamps]
-
-            plt.figure(figsize=(10, 5))
-            plt.plot(dates, lst_dict, marker='o')
-            plt.title('LST Temporal Analysis')
-            plt.xlabel('Date')
-            plt.ylabel('LST (°C)')
-            plt.grid(True)
-            st.pyplot(plt)
-
         st.markdown('</div>', unsafe_allow_html=True)
 
 if __name__ == "__main__":
