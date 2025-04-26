@@ -73,7 +73,7 @@ vis_params = {
 }
 
 lst_params = {
-    'min': 0,    # 0°C
+    'min': -10,    # 0°C
     'max': 50,   # 50°C
     'palette': ['blue', 'cyan', 'yellow', 'red']
 
