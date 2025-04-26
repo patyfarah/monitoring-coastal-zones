@@ -142,19 +142,18 @@ with col1:
 with col2:
     st.subheader("Good Environmental Status")
     st.markdown('<div class="right-column">', unsafe_allow_html=True)
-      
+     
     Map = geemap.Map(zoom=6, draw_ctrl=False)
-    
-   
+       
     # Add layers
     Map.addLayer(ndvi_mean, ndviVis, 'Mean NDVI',shown=False)
     Map.addLayer(lst_mean, lstVis, 'Mean LST',shown=False)
     Map.addLayer(filtered.style(**{
     "color": "black",
-    "fillColor": "00000000",  # Transparent fill
+    "fillColor": "00000000",
     "width": 2
     }), {}, f"{country} Border")
-
+    
     Map.centerObject(filtered)
     Map.to_streamlit(height=500)
 
