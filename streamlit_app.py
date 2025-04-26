@@ -70,7 +70,7 @@ vis_params = {
     'min': 0.0,
     'max': 1.0,
     'palette': ['white', 'yellow', 'green']
-
+}
 
 # Mask free cloud
 def mask_lst(image):
