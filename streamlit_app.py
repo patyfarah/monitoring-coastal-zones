@@ -208,5 +208,7 @@ with col2:
     
     st.success(f"Detected LST range: {min_val:.2f}°C to {max_val:.2f}°C")
 
-    
+ # Show the message (if detected)
+    if st.session_state.success_message:
+        st.success(st.session_state.success_message)   
     st.markdown('</div>', unsafe_allow_html=True)
