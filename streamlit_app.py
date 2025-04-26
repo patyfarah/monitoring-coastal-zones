@@ -111,7 +111,14 @@ with col2:
     st.markdown('<div class="right-column">', unsafe_allow_html=True)
     random_key = random.randint(0, 100000)  # Force Streamlit to refresh the map widget
 
-
+    # --- UI controls
+    st.sidebar.header("Map Controls")
+    
+    draw_ctrl = st.sidebar.checkbox("Enable Drawing Tools", value=False)
+    layer_ctrl = st.sidebar.checkbox("Enable Layer Control", value=True)
+    latlng_popup = st.sidebar.checkbox("Show Lat/Lng on Click", value=False)
+    fullscreen_ctrl = st.sidebar.checkbox("Fullscreen Button", value=False)
+    
     Map = geemap.Map(center=[33.89, 35.5], zoom=6, draw_ctrl=False,layer_ctrl=False,toolbar_ctrl=False,fullscreen_ctrl=False,latlng_popup=False, key=f"map_{random_key}")
     # Vis Param
     lstVis = {
@@ -135,6 +142,7 @@ with col2:
         '012e01', '011d01', '011301'
       ],
     }
+
     
     # Add layers
     Map.addLayer(ndvi_mean, ndviVis, 'Mean NDVI',shown=False)
