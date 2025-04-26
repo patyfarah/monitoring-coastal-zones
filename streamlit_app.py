@@ -94,7 +94,7 @@ def create_map(filtered, outer_band, ndvi_mean, lst_mean, country):
     Map = geemap.Map(zoom=6, draw_ctrl=False)
     
     Map.addLayer(ndvi_mean, ndviVis, 'Mean NDVI', shown=False)
-    Map.addLayer(goodNdvi, {min: -1, max: 1, palette: ['blue', 'white', 'green']}, 'Filtered NDVI');
+    Map.addLayer(goodNdvi, {'min': -1, 'max': 1, 'palette': ['blue', 'white', 'green']}, 'Filtered NDVI');
     Map.addLayer(lst_mean, lstVis, 'Mean LST', shown=False)
     Map.addLayer(filtered.style(**{
         "color": "black",
