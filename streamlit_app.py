@@ -51,7 +51,7 @@ with col1:
     region_geom = filtered.geometry()
     buffered = region_geom.buffer(-buffer_km * 1000)
     inland_band = buffered.intersection(filtered)
-    outer_boundary = buffered.difference(inland_band)
+    outer_band = buffered.difference(inland_band)
     
     ndvi_product = st.selectbox("NDVI Product", options=["MOD13A1"])
     lst_product = st.selectbox("LST Product", options=["MOD11A1"])
