@@ -135,7 +135,7 @@ with col1:
    # Define region of interest
     region = filtered.geometry()  
     
-    NDVI_PRODUCTS = {"MOD13A1": ee.ImageCollection("MODIS/061/MOD13A1")}
+    NDVI_PRODUCTS = {"MOD13A1": ee.ImageCollection("MODIS/061/MOD13A1").select(['NDVI', 'SummaryQA'])}
     LST_PRODUCTS = {"MOD11A1": ee.ImageCollection("MODIS/061/MOD11A1")}
     
     ndvi = get_image_collection(
@@ -146,7 +146,11 @@ with col1:
         LST_PRODUCTS, lst_product, region, start_date, end_date, mask_lst
     )
     
-    ndvi_mean = ndvi.mean().clip(outer_band)
+    # Apply the function across the ImageCollection
+    clean_ndvi = ndvi.map(mask_ndvi)
+    
+    # Take the mean of the cleaned NDVI images
+    mean_ndvi = clean_ndvi.mean().clip(outer_band)
     
     modcel = lst.map(lambda img: img
                      .multiply(0.02)
