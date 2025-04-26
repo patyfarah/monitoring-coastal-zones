@@ -119,7 +119,7 @@ with col2:
     latlng_popup = st.sidebar.checkbox("Show Lat/Lng on Click", value=False)
     fullscreen_ctrl = st.sidebar.checkbox("Fullscreen Button", value=False)
     
-    Map = geemap.Map(center=[33.89, 35.5], zoom=6, draw_ctrl=False,layer_ctrl=False,toolbar_ctrl=False,fullscreen_ctrl=False,latlng_popup=False, key=f"map_{random_key}")
+    Map = geemap.Map(zoom=6, draw_ctrl=False,layer_ctrl=False,toolbar_ctrl=False,fullscreen_ctrl=False,latlng_popup=False, key=f"map_{random_key}")
     # Vis Param
     lstVis = {
       'min': 13000.0,
@@ -153,7 +153,7 @@ with col2:
     "fillColor": "00000000",  # Transparent fill
     "width": 2
     }), {}, f"{country} Border")
-    Map.centerObject(filtered)
+
 
     Map.to_streamlit(height=500)
 
