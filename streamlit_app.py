@@ -105,7 +105,7 @@ def create_map(filtered, ndvi_mean, lst_mean):
     }), {}, "Country Border")
     Map.centerObject(filtered)
     Map.add_colorbar(
-        vis_params, label="LST (C)", layer_name="Mean LST", orientation="vertical"
+        LST_VIS, label="LST (C)", layer_name="Mean LST", orientation="vertical"
     )
     return Map
 
