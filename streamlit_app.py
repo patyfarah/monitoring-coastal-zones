@@ -66,6 +66,12 @@ ndviVis = {
   ],
 }
 
+vis_params = {
+    'min': 0.0,
+    'max': 1.0,
+    'palette': ['white', 'yellow', 'green']
+
+
 # Mask free cloud
 def mask_lst(image):
     qc = image.select('QC_Day')
@@ -171,7 +177,7 @@ with col2:
      
     Map = geemap.Map(zoom=6, draw_ctrl=False)
     
-    Map.addLayer(ndvi_mean, ndviVis, 'Mean NDVI', shown=False)
+    Map.addLayer(ndvi_mean, vis_params, 'Mean NDVI', shown=False)
     Map.addLayer(lst_mean, lstVis, 'Mean LST', shown=False)
     Map.addLayer(filtered.style(**{
         "color": "black",
