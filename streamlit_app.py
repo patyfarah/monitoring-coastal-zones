@@ -78,10 +78,10 @@ lst_params = {
     'palette': ['blue', 'cyan', 'yellow', 'red']
 
 def mask_lst(image, valid_qc_values=[0,1,2]):
-    qc = image.select('QC_Day')
-    good = qc.arrayContains(valid_qc_values)
-    lst = image.select('LST_Day_1km').multiply(0.02).subtract(273.15).copyProperties(image, ['system:time_start'])  # Scale LST
-    return lst.updateMask(good)
+    QA = image.select('QC_Day')
+    mandatory_qa = QA.bitwiseAnd(3)
+    good_quality = mandatory_qa.eq(0)
+    return image.updateMask(good_quality)
 
 
 def mask_ndvi(image):
@@ -155,10 +155,16 @@ with col1:
     lst = get_image_collection(
         LST_PRODUCTS, lst_product, region, start_date, end_date, mask_lst
     )
+    # Apply the masking function
+    good_lst = lst.map(mask_lst)
+    
+    # Convert LST from scaled integer to Kelvin
+    lst_cel = good_lst.select('LST_Day_1km').map(lambda img: img.multiply(0.02).substract(273.15).copyProperties(img, img.propertyNames()))
+
     
     # Mean data
     ndvi_mean = ndvi.median().clip(outer_band) 
-    lst_mean = lst.median().clip(outer_band)
+    lst_mean = lst_cel.mean().clip(outer_band)
 
   
     
