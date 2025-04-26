@@ -1,12 +1,14 @@
+#-------------------------------------------------------
 # Libraries
-
+#-------------------------------------------------------
 import streamlit as st
 import ee
 import json
 import geemap.foliumap as geemap
 from google.oauth2 import service_account
-#--------------------------------------------------------------------------------------------------------
-
+#--------------------------------------------------------
+# Initialization
+#-------------------------------------------------------
 # Load service account info from Streamlit secrets
 service_account_info = dict(st.secrets["earthengine"])
 
@@ -18,7 +20,54 @@ credentials = service_account.Credentials.from_service_account_info(
 
 # Initialize Earth Engine
 ee.Initialize(credentials)
+#--------------------------------------------------------------
+# Variables and Definitions
+#--------------------------------------------------------------
+ # Export function and button
+    def export_ndvi_to_drive():
+        task = ee.batch.Export.image.toDrive(
+            image=ndvi_mean,
+            description=f'{country}_NDVI_{start_date}_{end_date}',
+            folder='earthengine',
+            fileNamePrefix=f'{country}_NDVI_{start_date}_{end_date}',
+            region=region_geom.bounds().getInfo()['coordinates'],
+            scale=250,
+            fileFormat='GeoTIFF'
+        )
+        task.start()
+        status = task.status()
+        print(status)
+        if status['state'] == 'READY':
+            st.success("Export task started! Check Google Earth Engine tasks.")
+        else:
+            st.error(f"Export failed to start. Reason: {status}")
 
+ # Vis Param
+    lstVis = {
+      'min': 13000.0,
+      'max': 16500.0,
+      'palette': [
+        '040274', '040281', '0502a3', '0502b8', '0502ce', '0502e6',
+        '0602ff', '235cb1', '307ef3', '269db1', '30c8e2', '32d3ef',
+        '3be285', '3ff38f', '86e26f', '3ae237', 'b5e22e', 'd6e21f',
+        'fff705', 'ffd611', 'ffb613', 'ff8b13', 'ff6e08', 'ff500d',
+        'ff0000', 'de0101', 'c21301', 'a71001', '911003'
+      ],
+    }
+
+    ndviVis = {
+      'min': 0,
+      'max': 9000,
+      'palette': [
+        'ffffff', 'ce7e45', 'df923d', 'f1b555', 'fcd163', '99b718', '74a901',
+        '66a000', '529400', '3e8601', '207401', '056201', '004c00', '023b01',
+        '012e01', '011d01', '011301'
+      ],
+    }
+    
+#---------------------------------------------------------------
+# Streamlit Structure
+#--------------------------------------------------------------
 # Title
 st.title("GES-Coastal Monitor")
 
@@ -79,31 +128,10 @@ with col1:
        
     )
     ndvi_mean = ndvi.mean().clip(outer_band)
-    lst_mean = lst.mean().clip(outer_band)
-    
+    lst_mean = lst.mean().clip(outer_band)   
 
    # Define region of interest
-    region = filtered.geometry()
-    
-    # Export function and button
-    def export_ndvi_to_drive():
-        task = ee.batch.Export.image.toDrive(
-            image=ndvi_mean,
-            description=f'{country}_NDVI_{start_date}_{end_date}',
-            folder='earthengine',
-            fileNamePrefix=f'{country}_NDVI_{start_date}_{end_date}',
-            region=region_geom.bounds().getInfo()['coordinates'],
-            scale=250,
-            fileFormat='GeoTIFF'
-        )
-        task.start()
-        status = task.status()
-        print(status)
-        if status['state'] == 'READY':
-            st.success("Export task started! Check Google Earth Engine tasks.")
-        else:
-            st.error(f"Export failed to start. Reason: {status}")
-       
+    region = filtered.geometry()     
     
     if st.button("Export to Drive"):
         export_ndvi_to_drive()
@@ -117,29 +145,7 @@ with col2:
       
     Map = geemap.Map(zoom=6, draw_ctrl=False)
     
-    # Vis Param
-    lstVis = {
-      'min': 13000.0,
-      'max': 16500.0,
-      'palette': [
-        '040274', '040281', '0502a3', '0502b8', '0502ce', '0502e6',
-        '0602ff', '235cb1', '307ef3', '269db1', '30c8e2', '32d3ef',
-        '3be285', '3ff38f', '86e26f', '3ae237', 'b5e22e', 'd6e21f',
-        'fff705', 'ffd611', 'ffb613', 'ff8b13', 'ff6e08', 'ff500d',
-        'ff0000', 'de0101', 'c21301', 'a71001', '911003'
-      ],
-    }
-
-    ndviVis = {
-      'min': 0,
-      'max': 9000,
-      'palette': [
-        'ffffff', 'ce7e45', 'df923d', 'f1b555', 'fcd163', '99b718', '74a901',
-        '66a000', '529400', '3e8601', '207401', '056201', '004c00', '023b01',
-        '012e01', '011d01', '011301'
-      ],
-    }
-    
+   
     # Add layers
     Map.addLayer(ndvi_mean, ndviVis, 'Mean NDVI',shown=False)
     Map.addLayer(lst_mean, lstVis, 'Mean LST',shown=False)
