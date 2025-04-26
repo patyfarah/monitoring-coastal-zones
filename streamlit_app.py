@@ -110,10 +110,32 @@ with col2:
     st.markdown('<div class="right-column">', unsafe_allow_html=True)
 
     Map = geemap.Map(center=[33.89, 35.5], zoom=6, draw_ctrl=False, data_ctrl=False, toolbar_ctrl=False)
+    # Vis Param
+    LSTVis = {
+      min: 13000.0,
+      max: 16500.0,
+      palette: [
+        '040274', '040281', '0502a3', '0502b8', '0502ce', '0502e6',
+        '0602ff', '235cb1', '307ef3', '269db1', '30c8e2', '32d3ef',
+        '3be285', '3ff38f', '86e26f', '3ae237', 'b5e22e', 'd6e21f',
+        'fff705', 'ffd611', 'ffb613', 'ff8b13', 'ff6e08', 'ff500d',
+        'ff0000', 'de0101', 'c21301', 'a71001', '911003'
+      ],
+    };
 
+    ndviVis = {
+      min: 0,
+      max: 9000,
+      palette: [
+        'ffffff', 'ce7e45', 'df923d', 'f1b555', 'fcd163', '99b718', '74a901',
+        '66a000', '529400', '3e8601', '207401', '056201', '004c00', '023b01',
+        '012e01', '011d01', '011301'
+      ],
+    };
+    
     # Add layers
-    Map.addLayer(ndvi_mean, {'min': 0, 'max': 9000, 'palette': ['white', 'green']}, 'Mean NDVI',shown=False)
-    Map.addLayer(lst_mean, {'min': 0, 'max': 9000, 'palette': ['white', 'red']}, 'Mean LST',shown=False)
+    Map.addLayer(ndvi_mean, ndviVis, 'Mean NDVI',shown=False)
+    Map.addLayer(lst_mean, LSTVis, 'Mean LST',shown=False)
     Map.addLayer(inland_band, {}, '10km inland zone')
     Map.addLayer(filtered.style(**{
     "color": "black",
