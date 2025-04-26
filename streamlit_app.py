@@ -149,8 +149,10 @@ def main():
         )
 
 
-        ndvi_mean = ndvi.median().clip(outer_band)
-        lst_mean = lst.median().clip(outer_band)
+        ndvi_mean = ndvi.mean().clip(outer_band)
+        # Rescale and convert LST to Celsius
+        lst_mean = lst.mean().multiply(0.02).subtract(273.15).clip(outer_band)
+
 
         # Export button
         if st.button("Export to Drive"):
