@@ -78,7 +78,7 @@ def mask_ndvi(image):
     qa = image.select('SummaryQA')
     good = qa.lte(1)  # Good or marginal pixels
     ndvi = image.select('NDVI').multiply(0.0001)  # SCALE NDVI
-    return ndvi.updateMask(summaryQA.eq(1))
+    return ndvi.updateMask(SummaryQA.eq(1))
 
 def get_image_collection(collection_dict, product, region, start_date, end_date, mask_func):
     collection = (
