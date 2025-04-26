@@ -150,7 +150,7 @@ with col1:
     clean_ndvi = ndvi.map(mask_ndvi)
     
     # Take the mean of the cleaned NDVI images
-    mean_ndvi = clean_ndvi.mean().clip(outer_band)
+    ndvi_mean = clean_ndvi.mean().clip(outer_band)
     
     modcel = lst.map(lambda img: img
                      .multiply(0.02)
