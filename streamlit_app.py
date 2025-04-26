@@ -51,7 +51,7 @@ with col1:
     region_geom = filtered.geometry()
     buffered = region_geom.buffer(-buffer_km * 1000)
     inland_band = buffered.intersection(filtered)
-    inner = inland_band.buffer(-100) 
+    inner = inland_band.buffer(buffer_km * 1000) 
     outer_band =inland_band.difference(inner)
     
     ndvi_product = st.selectbox("NDVI Product", options=["MOD13A1"])
