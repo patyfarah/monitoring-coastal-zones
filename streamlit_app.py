@@ -77,12 +77,10 @@ lst_params = {
     'max': 50,   # 50°C
     'palette': ['blue', 'cyan', 'yellow', 'red']
 
-
-# Mask free cloud
 def mask_lst(image):
     qc = image.select('QC_Day')
     good = qc.eq(0)  # Good quality pixels only
-    lst = image.select('LST_Day_1km').multiply(0.02).subtract(273.15)  # Scale LST
+    lst = image.select('LST_Day_1km').multiply(0.02).subtract(273.15).copyProperties(image, ['system:time_start'])  # Scale LST
     return lst.updateMask(good)
 
 
