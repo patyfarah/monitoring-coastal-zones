@@ -155,7 +155,11 @@ with col2:
     }), {}, f"{country} Border")
 
     Map.centerObject(filtered)
-    Map.add_legend()
+    
+    # Force removal if still present
+    if hasattr(Map, 'draw_control'):
+    Map.remove_control(Map.draw_control)
+        
     Map.to_streamlit(height=500)
 
     st.markdown('</div>', unsafe_allow_html=True)
