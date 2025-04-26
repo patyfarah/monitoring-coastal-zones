@@ -155,6 +155,7 @@ with col2:
     }), {}, f"{country} Border")
 
     Map.centerObject(filtered)
+    Map.add_legend()
     Map.to_streamlit(height=500)
 
     st.markdown('</div>', unsafe_allow_html=True)
