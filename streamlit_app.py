@@ -63,7 +63,7 @@ with col1:
         ndvi_collections[ndvi_product]
         .filterBounds(filtered)
         .filterDate(start_date, end_date)
-        .filter(ee.Filter.lte('CLOUD_COVER',10))
+     
     )
 
     lst_collections = {
@@ -74,7 +74,7 @@ with col1:
         lst_collections[lst_product]
         .filterBounds(filtered)
         .filterDate(start_date, end_date)
-        .filter(ee.Filter.lte('CLOUD_COVER',10))
+       
     )
     ndvi_mean = ndvi.mean().clip(outer_band)
     lst_mean = lst.mean().clip(outer_band)
