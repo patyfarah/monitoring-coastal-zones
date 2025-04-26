@@ -69,7 +69,7 @@ ndviVis = {
 vis_params = {
     'min': 0.0,
     'max': 1.0,
-    'palette': ['white', 'yellow', 'green']
+    'palette': ['grey', 'yellow', 'green']
 }
 
 # Mask free cloud
