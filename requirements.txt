@@ -2,4 +2,6 @@ streamlit
 geemap 
 earthengine-api
 google-auth
+pandas 
+matplotlib
 
