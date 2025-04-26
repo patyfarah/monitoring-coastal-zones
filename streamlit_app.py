@@ -121,7 +121,7 @@ with col2:
         'fff705', 'ffd611', 'ffb613', 'ff8b13', 'ff6e08', 'ff500d',
         'ff0000', 'de0101', 'c21301', 'a71001', '911003'
       ],
-    };
+    }
 
     ndviVis = {
       min: 0,
@@ -131,7 +131,7 @@ with col2:
         '66a000', '529400', '3e8601', '207401', '056201', '004c00', '023b01',
         '012e01', '011d01', '011301'
       ],
-    };
+    }
     
     # Add layers
     Map.addLayer(ndvi_mean, ndviVis, 'Mean NDVI',shown=False)
