@@ -222,22 +222,22 @@ def main():
         Map.to_streamlit(height=500)
 
         st.markdown('</div>', unsafe_allow_html=True)
-    with st.spinner("Generating time series..."):
-    ndvi_ts = get_time_series(ndvi, region_geom, 'NDVI')
-    lst_ts = get_time_series(lst, region_geom, 'LST_Celsius')
-
-    # Regular time series charts
-    st.subheader("NDVI Time Series (Per Image)")
-    st.line_chart(ndvi_ts.rename(columns={"Mean Value": "NDVI"}).set_index('Date'))
-
-    st.subheader("LST Time Series (Per Image)")
-    st.line_chart(lst_ts.rename(columns={"Mean Value": "LST (°C)"}).set_index('Date'))
-
-    # Yearly aggregated LST
-    lst_yearly = get_yearly_time_series(lst, region_geom, 'LST_Celsius')
+        with st.spinner("Generating time series..."):
+        ndvi_ts = get_time_series(ndvi, region_geom, 'NDVI')
+        lst_ts = get_time_series(lst, region_geom, 'LST_Celsius')
     
-    st.subheader("LST Yearly Mean (°C)")
-    st.line_chart(lst_yearly.rename(columns={"Mean Value": "LST (°C)"}).set_index('Year'))
+        # Regular time series charts
+        st.subheader("NDVI Time Series (Per Image)")
+        st.line_chart(ndvi_ts.rename(columns={"Mean Value": "NDVI"}).set_index('Date'))
+    
+        st.subheader("LST Time Series (Per Image)")
+        st.line_chart(lst_ts.rename(columns={"Mean Value": "LST (°C)"}).set_index('Date'))
+    
+        # Yearly aggregated LST
+        lst_yearly = get_yearly_time_series(lst, region_geom, 'LST_Celsius')
+        
+        st.subheader("LST Yearly Mean (°C)")
+        st.line_chart(lst_yearly.rename(columns={"Mean Value": "LST (°C)"}).set_index('Year'))
 
 
 if __name__ == "__main__":
