@@ -111,7 +111,7 @@ with col2:
 
     Map = geemap.Map(center=[33.89, 35.5], zoom=6, draw_ctrl=False, data_ctrl=False, toolbar_ctrl=False)
     # Vis Param
-    LSTVis = {
+    lstVis = {
       min: 13000.0,
       max: 16500.0,
       palette: [
@@ -135,7 +135,7 @@ with col2:
     
     # Add layers
     Map.addLayer(ndvi_mean, ndviVis, 'Mean NDVI',shown=False)
-    Map.addLayer(lst_mean, LSTVis, 'Mean LST',shown=False)
+    Map.addLayer(lst_mean, lstVis, 'Mean LST',shown=False)
     Map.addLayer(inland_band, {}, '10km inland zone')
     Map.addLayer(filtered.style(**{
     "color": "black",
