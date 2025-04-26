@@ -3,6 +3,7 @@ import ee
 import json
 import geemap.foliumap as geemap
 from google.oauth2 import service_account
+import random
 
 # Load service account info from Streamlit secrets
 service_account_info = dict(st.secrets["earthengine"])
@@ -108,8 +109,10 @@ with col1:
 with col2:
     st.subheader("Good Environmental Status")
     st.markdown('<div class="right-column">', unsafe_allow_html=True)
+    random_key = random.randint(0, 100000)  # Force Streamlit to refresh the map widget
 
-    Map = geemap.Map(center=[33.89, 35.5], zoom=6, draw_ctrl=False, data_ctrl=False, toolbar_ctrl=False)
+
+    Map = geemap.Map(center=[33.89, 35.5], zoom=6, draw_ctrl=False, data_ctrl=False, toolbar_ctrl=False, key=f"map_{random_key}")
     # Vis Param
     lstVis = {
       'min': 13000.0,
