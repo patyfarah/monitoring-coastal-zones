@@ -146,11 +146,8 @@ with col1:
         LST_PRODUCTS, lst_product, region, start_date, end_date, mask_lst
     )
     
-    # Apply the function across the ImageCollection
-    clean_ndvi = ndvi.map(mask_ndvi)
-    
     # Take the mean of the cleaned NDVI images
-    ndvi_mean = clean_ndvi.mean().clip(outer_band)
+    ndvi_mean = ndvi.mean().clip(outer_band)
     
     modcel = lst.map(lambda img: img
                      .multiply(0.02)
