@@ -72,6 +72,20 @@ vis_params = {
     'palette': ['grey', 'yellow', 'green']
 }
 
+lst_params = {
+    'min': -10,         # Minimum temperature for color scale (°C)
+    'max': 50,          # Maximum temperature for color scale (°C)
+    'palette': [
+        'blue',         # Cold areas
+        'cyan',
+        'green',
+        'yellow',
+        'orange',
+        'red'           # Hot areas
+    ]
+}
+
+
 # Mask free cloud
 def mask_lst(image):
     qc = image.select('QC_Day')
@@ -178,7 +192,7 @@ with col2:
     Map = geemap.Map(zoom=6, draw_ctrl=False)
     
     Map.addLayer(ndvi_mean, vis_params, 'Mean NDVI', shown=False)
-    Map.addLayer(lst_mean, lstVis, 'Mean LST', shown=False)
+    Map.addLayer(lst_mean, lst_params, 'Mean LST', shown=False)
     Map.addLayer(filtered.style(**{
         "color": "black",
         "fillColor": "00000000",
