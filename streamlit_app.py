@@ -57,8 +57,8 @@ lstVis = {
 }
 
 ndviVis = {
-  'min': -1,
-  'max': 1,
+  'min': 0.0,
+  'max': 9000.0,
   'palette': [
     'ffffff', 'ce7e45', 'df923d', 'f1b555', 'fcd163', '99b718', '74a901',
     '66a000', '529400', '3e8601', '207401', '056201', '004c00', '023b01',
@@ -67,7 +67,7 @@ ndviVis = {
 }
 
 vis_params = {
-    'min': 0.0,
+    'min': -1.0,
     'max': 1.0,
     'palette': ['grey', 'yellow', 'green']
 }
