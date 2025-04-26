@@ -90,6 +90,22 @@ def get_image_collection(collection_dict, product, region, start_date, end_date,
     collection = collection.map(mask_func)
     return collection
 
+def create_map(filtered, outer_band, ndvi_mean, lst_mean, country):
+    Map = geemap.Map(zoom=6, draw_ctrl=False)
+    
+    Map.addLayer(ndvi_mean, ndviVis, 'Mean NDVI', shown=False)
+    Map.addLayer(lst_mean, lstVis, 'Mean LST', shown=False)
+    Map.addLayer(filtered.style(**{
+        "color": "black",
+        "fillColor": "00000000",
+        "width": 2
+    }), {}, f"{country} Border")
+    
+    Map.centerObject(filtered)
+    return Map
+
+
+
 #---------------------------------------------------------------
 # Streamlit Structure
 #--------------------------------------------------------------
@@ -180,5 +196,10 @@ with col2:
     
     Map.centerObject(filtered)
     Map.to_streamlit(height=500)
+
+    if st.button("Rebuild Map"):
+    Map = create_map(filtered, outer_band, ndvi_mean, lst_mean, country)
+    Map.to_streamlit(height=500)
+
 
     st.markdown('</div>', unsafe_allow_html=True)
