@@ -24,23 +24,23 @@ ee.Initialize(credentials)
 # Variables and Definitions
 #--------------------------------------------------------------
  # Export function and button
-    def export_ndvi_to_drive():
-        task = ee.batch.Export.image.toDrive(
-            image=ndvi_mean,
-            description=f'{country}_NDVI_{start_date}_{end_date}',
-            folder='earthengine',
-            fileNamePrefix=f'{country}_NDVI_{start_date}_{end_date}',
-            region=region_geom.bounds().getInfo()['coordinates'],
-            scale=250,
-            fileFormat='GeoTIFF'
-        )
-        task.start()
-        status = task.status()
-        print(status)
-        if status['state'] == 'READY':
-            st.success("Export task started! Check Google Earth Engine tasks.")
-        else:
-            st.error(f"Export failed to start. Reason: {status}")
+def export_ndvi_to_drive():
+    task = ee.batch.Export.image.toDrive(
+        image=ndvi_mean,
+        description=f'{country}_NDVI_{start_date}_{end_date}',
+        folder='earthengine',
+        fileNamePrefix=f'{country}_NDVI_{start_date}_{end_date}',
+        region=region_geom.bounds().getInfo()['coordinates'],
+        scale=250,
+        fileFormat='GeoTIFF'
+    )
+    task.start()
+    status = task.status()
+    print(status)
+    if status['state'] == 'READY':
+        st.success("Export task started! Check Google Earth Engine tasks.")
+    else:
+        st.error(f"Export failed to start. Reason: {status}")
 
  # Vis Param
     lstVis = {
