@@ -64,7 +64,28 @@ ndviVis = {
     '012e01', '011d01', '011301'
   ],
 }
-    
+
+# Mask free cloud
+def mask_lst(image):
+    qc = image.select('QC_Day')
+    good = qc.eq(0)
+    return image.updateMask(good)
+
+def mask_ndvi(image):
+    qa = image.select('SummaryQA')
+    good = qa.lte(1)
+    return image.updateMask(good)
+
+def get_image_collection(collection_dict, product, region, start_date, end_date, mask_func=None):
+    collection = (
+        collection_dict[product]
+        .filterBounds(region)
+        .filterDate(start_date, end_date)
+    )
+    if mask_func:
+        collection = collection.map(mask_func)
+    return collection
+
 #---------------------------------------------------------------
 # Streamlit Structure
 #--------------------------------------------------------------
@@ -106,29 +127,22 @@ with col1:
     ndvi_product = st.selectbox("NDVI Product", options=["MOD13A1"])
     lst_product = st.selectbox("LST Product", options=["MOD11A1"])
 
-    ndvi_collections = {
-        "MOD13A1": ee.ImageCollection("MODIS/061/MOD13A1").select("NDVI")
-    }
-
-    ndvi = (
-        ndvi_collections[ndvi_product]
-        .filterBounds(filtered)
-        .filterDate(start_date, end_date)
-     
+    ndvi = get_image_collection(
+        NDVI_PRODUCTS, ndvi_product, filtered, start_date, end_date, mask_func=mask_ndvi
     )
-
-    lst_collections = {
-        "MOD11A1": ee.ImageCollection("MODIS/061/MOD11A1").select("LST_Day_1km")
-    }
-
-    lst = (
-        lst_collections[lst_product]
-        .filterBounds(filtered)
-        .filterDate(start_date, end_date)
-       
+    
+    lst = get_image_collection(
+        LST_PRODUCTS, lst_product, filtered, start_date, end_date, mask_func=mask_lst
     )
+    
     ndvi_mean = ndvi.mean().clip(outer_band)
-    lst_mean = lst.mean().clip(outer_band)   
+    
+    modcel = lst.map(lambda img: img
+                     .multiply(0.02)
+                     .subtract(273.15)
+                     .copyProperties(img, ['system:time_start']))
+    
+    lst_mean = modcel.mean().clip(outer_band)
 
    # Define region of interest
     region = filtered.geometry()     
