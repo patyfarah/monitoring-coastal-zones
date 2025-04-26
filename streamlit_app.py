@@ -74,7 +74,7 @@ def mask_lst(image):
     return image.updateMask(good)
 
 def mask_ndvi(image):
-    qa = image.select('SummaryQA')
+    qa = image.select('DetailedQA')
     good = qa.eq(0)
     return image.updateMask(good)
 
