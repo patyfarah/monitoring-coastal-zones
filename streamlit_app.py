@@ -94,19 +94,24 @@ def export_to_drive(image, description, region):
     task.start()
     return task.status()
 
-def create_map(filtered, ndvi_mean, lst_mean):
+def create_map(filtered, ndvi_mean, lst_mean, selected_layers):
     Map = geemap.Map(zoom=6, draw_ctrl=True)
-    Map.addLayer(ndvi_mean, NDVI_VIS, 'Mean NDVI', shown=False)
-    Map.addLayer(lst_mean, LST_VIS, 'Mean LST', shown=False)
+
+    if "Mean NDVI" in selected_layers:
+        Map.addLayer(ndvi_mean, NDVI_VIS, 'Mean NDVI', shown=True)
+        Map.add_colorbar(NDVI_VIS, label="NDVI", layer_name="Mean NDVI", orientation="vertical")
+
+    if "Mean LST" in selected_layers:
+        Map.addLayer(lst_mean, LST_VIS, 'Mean LST', shown=True)
+        Map.add_colorbar(LST_VIS, label="LST (°C)", layer_name="Mean LST", orientation="vertical")
+
     Map.addLayer(filtered.style(**{
         "color": "black",
         "fillColor": "00000000",
         "width": 2
     }), {}, "Country Border")
+
     Map.centerObject(filtered)
-    Map.add_colorbar(
-        LST_VIS, label="LST (C)", layer_name="Mean LST", orientation="vertical"
-    )
     return Map
 
 # -----------------------
@@ -174,11 +179,17 @@ def main():
         st.subheader("Good Environmental Status")
         st.markdown('<div class="right-column">', unsafe_allow_html=True)
 
-        Map = create_map(filtered, ndvi_mean, lst_mean)
- 
+        selected_layers = st.multiselect(
+            "Select Layers to Display",
+            ["Mean NDVI", "Mean LST"],
+            default=["Mean NDVI", "Mean LST"]
+        )
+
+        Map = create_map(filtered, ndvi_mean, lst_mean, selected_layers)
         Map.to_streamlit(height=500)
 
         st.markdown('</div>', unsafe_allow_html=True)
+
 
 if __name__ == "__main__":
     main()
