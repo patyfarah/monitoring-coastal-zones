@@ -15,6 +15,8 @@ def initialize_ee():
     credentials = service_account.Credentials.from_service_account_info(
         service_account_info, scopes=SCOPES)
     ee.Initialize(credentials)
+    NDVI_PRODUCTS = {"MOD13A1": ee.ImageCollection("MODIS/061/MOD13A1").select("NDVI")}
+    LST_PRODUCTS = {"MOD11A1": ee.ImageCollection("MODIS/061/MOD11A1").select("LST_Day_1km")}
 
 
 # -----------------------
@@ -26,8 +28,6 @@ COUNTRIES = [
     "Morocco", "Algeria", "Tunisia", "Libya", "Arab Republic of Egypt",
     "Syrian Arab Republic", "Lebanon", "Yemen", "Mauritania"
 ]
-NDVI_PRODUCTS = {"MOD13A1": ee.ImageCollection("MODIS/061/MOD13A1").select("NDVI")}
-LST_PRODUCTS = {"MOD11A1": ee.ImageCollection("MODIS/061/MOD11A1").select("LST_Day_1km")}
 
 NDVI_VIS = {
     'min': 0,
