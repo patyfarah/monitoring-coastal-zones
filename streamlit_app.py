@@ -20,6 +20,8 @@ credentials = service_account.Credentials.from_service_account_info(
 
 # Initialize Earth Engine
 ee.Initialize(credentials)
+NDVI_PRODUCTS = {"MOD13A1": ee.ImageCollection("MODIS/061/MOD13A1").select("NDVI")}
+LST_PRODUCTS = {"MOD11A1": ee.ImageCollection("MODIS/061/MOD11A1").select("LST_Day_1km")}
 #--------------------------------------------------------------
 # Variables and Definitions
 #--------------------------------------------------------------
