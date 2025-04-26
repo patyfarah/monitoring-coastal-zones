@@ -20,8 +20,7 @@ credentials = service_account.Credentials.from_service_account_info(
 
 # Initialize Earth Engine
 ee.Initialize(credentials)
-NDVI_PRODUCTS = {"MOD13A1": ee.ImageCollection("MODIS/061/MOD13A1").select("NDVI")}
-LST_PRODUCTS = {"MOD11A1": ee.ImageCollection("MODIS/061/MOD11A1").select("LST_Day_1km")}
+
 #--------------------------------------------------------------
 # Variables and Definitions
 #--------------------------------------------------------------
@@ -125,6 +124,9 @@ with col1:
     region_geom = filtered.geometry()
     buffered = region_geom.buffer(-buffer_km * 1000)
     outer_band =region_geom.difference(buffered)
+
+    NDVI_PRODUCTS = {"MOD13A1": ee.ImageCollection("MODIS/061/MOD13A1").select("NDVI")}
+    LST_PRODUCTS = {"MOD11A1": ee.ImageCollection("MODIS/061/MOD11A1").select("LST_Day_1km")}
     
     ndvi_product = st.selectbox("NDVI Product", options=["MOD13A1"])
     lst_product = st.selectbox("LST Product", options=["MOD11A1"])
