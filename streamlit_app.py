@@ -109,17 +109,9 @@ with col1:
 with col2:
     st.subheader("Good Environmental Status")
     st.markdown('<div class="right-column">', unsafe_allow_html=True)
-    random_key = random.randint(0, 100000)  # Force Streamlit to refresh the map widget
-
-    # --- UI controls
-    st.sidebar.header("Map Controls")
-    
-    draw_ctrl = st.sidebar.checkbox("Enable Drawing Tools", value=False)
-    layer_ctrl = st.sidebar.checkbox("Enable Layer Control", value=True)
-    latlng_popup = st.sidebar.checkbox("Show Lat/Lng on Click", value=False)
-    fullscreen_ctrl = st.sidebar.checkbox("Fullscreen Button", value=False)
-    
-    Map = geemap.Map(zoom=6, draw_ctrl=draw_ctrl,layer_ctrl=layer_ctrl,fullscreen_ctrl=fullscreen_ctrl,latlng_popup=latlng_popup, key=f"map_{random_key}")
+    st_folium(m, key="unique_map_key_no_draw")
+   
+    Map = geemap.Map(zoom=6, draw_ctrl=False")
     # Vis Param
     lstVis = {
       'min': 13000.0,
@@ -155,11 +147,6 @@ with col2:
     }), {}, f"{country} Border")
 
     Map.centerObject(filtered)
-    
-    # Force removal if still present
-    if hasattr(Map, 'draw_control'):
-    Map.remove_control(Map.draw_control)
-        
     Map.to_streamlit(height=500)
 
     st.markdown('</div>', unsafe_allow_html=True)
