@@ -15,8 +15,6 @@ def initialize_ee():
     credentials = service_account.Credentials.from_service_account_info(
         service_account_info, scopes=SCOPES)
     ee.Initialize(credentials)
-    NDVI_PRODUCTS = {"MOD13A1": ee.ImageCollection("MODIS/061/MOD13A1").select("NDVI")}
-    LST_PRODUCTS = {"MOD11A1": ee.ImageCollection("MODIS/061/MOD11A1").select("LST_Day_1km")}
 
 # -----------------------
 # Constants and Settings
@@ -144,6 +142,10 @@ def main():
         buffer_km = st.number_input("Coastal Buffer (km)", min_value=0, max_value=100, value=10)
 
         filtered, region_geom, outer_band = filter_country(country, buffer_km)
+
+        NDVI_PRODUCTS = {"MOD13A1": ee.ImageCollection("MODIS/061/MOD13A1").select("NDVI")}
+        LST_PRODUCTS = {"MOD11A1": ee.ImageCollection("MODIS/061/MOD11A1").select("LST_Day_1km")}
+
         ndvi_product = st.selectbox("NDVI Product", options=list(NDVI_PRODUCTS.keys()))
         lst_product = st.selectbox("LST Product", options=list(LST_PRODUCTS.keys()))
 
