@@ -50,9 +50,7 @@ with col1:
     filtered = countries.filter(ee.Filter.eq('country_na', country))
     region_geom = filtered.geometry()
     buffered = region_geom.buffer(-buffer_km * 1000)
-    inland_band = buffered.intersection(filtered)
-    inner = inland_band.buffer(buffer_km * 1000) 
-    outer_band =inland_band.difference(inner)
+    outer_band =inland_band.difference(buffered)
     
     ndvi_product = st.selectbox("NDVI Product", options=["MOD13A1"])
     lst_product = st.selectbox("LST Product", options=["MOD11A1"])
@@ -140,7 +138,6 @@ with col2:
     # Add layers
     Map.addLayer(ndvi_mean, ndviVis, 'Mean NDVI',shown=False)
     Map.addLayer(lst_mean, lstVis, 'Mean LST',shown=False)
-    Map.addLayer(inland_band, {}, 'inland zone',shown=False)
     Map.addLayer(outer_band, {}, 'Outer zone',shown=False)
     Map.addLayer(filtered.style(**{
     "color": "black",
