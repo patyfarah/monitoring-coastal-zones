@@ -177,10 +177,7 @@ with col1:
     if st.button("Export to Drive"):
         export_ndvi_to_drive()
 
-    if st.button("Rebuild Map"):
-        Map = create_map(filtered, outer_band, ndvi_mean, lst_mean, country)
-        Map.to_streamlit(height=500)
-    
+  
     st.markdown('</div>', unsafe_allow_html=True)
 
 # Right Panel
