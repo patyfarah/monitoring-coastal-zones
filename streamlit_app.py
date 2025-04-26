@@ -73,7 +73,7 @@ vis_params = {
 }
 
 lst_params = {
-    'min': 10,    # 0°C
+    'min': 0,    # 0°C
     'max': 50,   # 50°C
     'palette': ['blue', 'cyan', 'yellow', 'red']
 
@@ -159,8 +159,8 @@ with col1:
     )
     
     # Mean data
-    ndvi_mean = ndvi.mean().clip(outer_band) 
-    lst_mean = lst.mean().clip(outer_band)
+    ndvi_mean = ndvi.median().clip(outer_band) 
+    lst_mean = lst.median().clip(outer_band)
 
   
     
