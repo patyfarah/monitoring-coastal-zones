@@ -119,7 +119,7 @@ with col2:
     latlng_popup = st.sidebar.checkbox("Show Lat/Lng on Click", value=False)
     fullscreen_ctrl = st.sidebar.checkbox("Fullscreen Button", value=False)
     
-    Map = geemap.Map(zoom=6, draw_ctrl=False,layer_ctrl=False,toolbar_ctrl=False,fullscreen_ctrl=False,latlng_popup=False, key=f"map_{random_key}")
+    Map = geemap.Map(zoom=6, draw_ctrl=draw_ctrl,layer_ctrl=layer_ctrl,fullscreen_ctrl=fullscreen_ctrl,latlng_popup=latlng_popup, key=f"map_{random_key}")
     # Vis Param
     lstVis = {
       'min': 13000.0,
