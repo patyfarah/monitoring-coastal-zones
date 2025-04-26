@@ -112,9 +112,9 @@ with col2:
     Map = geemap.Map(center=[33.89, 35.5], zoom=6, draw_ctrl=False, data_ctrl=False, toolbar_ctrl=False)
     # Vis Param
     lstVis = {
-      min: 13000.0,
-      max: 16500.0,
-      palette: [
+      'min': 13000.0,
+      'max': 16500.0,
+      'palette': [
         '040274', '040281', '0502a3', '0502b8', '0502ce', '0502e6',
         '0602ff', '235cb1', '307ef3', '269db1', '30c8e2', '32d3ef',
         '3be285', '3ff38f', '86e26f', '3ae237', 'b5e22e', 'd6e21f',
@@ -124,9 +124,9 @@ with col2:
     }
 
     ndviVis = {
-      min: 0,
-      max: 9000,
-      palette: [
+      'min': 0,
+      'max': 9000,
+      'palette': [
         'ffffff', 'ce7e45', 'df923d', 'f1b555', 'fcd163', '99b718', '74a901',
         '66a000', '529400', '3e8601', '207401', '056201', '004c00', '023b01',
         '012e01', '011d01', '011301'
