@@ -74,8 +74,8 @@ with col1:
         .filterBounds(filtered)
         .filterDate(start_date, end_date)
     )
-    ndvi_mean = ndvi.mean().clip(outer_band)
-    lst_mean = lst.mean().clip(outer_band)
+    ndvi_mean = ndvi.mean().clip(buffered)
+    lst_mean = lst.mean().clip(buffered)
 
    # Define region of interest
     region = filtered.geometry()
