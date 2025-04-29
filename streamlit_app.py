@@ -78,10 +78,14 @@ lst_params = {
     'palette': ['blue', 'cyan', 'yellow', 'red']}
 
 def mask_lst(image, valid_qc_values=[0,1,2]):
-    QA = image.select('QC_Day')
-    mandatory_qa = QA.bitwiseAnd(3)
-    good_quality = mandatory_qa.eq(0)
-    return image.updateMask(good_quality)
+      var qc = img.select('QC_Day');
+      var goodMask = qc.lte(1);  // Good quality
+      var temp = img.select('LST_Day_1km')
+                    .updateMask(goodMask) // Mask bad pixels
+                    .multiply(0.02)       // Scale factor for MOD11A1
+                    .subtract(273.15)     // Convert Kelvin to Celsius
+                    .copyProperties(img, ['system:time_start']); // Preserve date
+      return temp;
 
 
 def mask_ndvi(image):
