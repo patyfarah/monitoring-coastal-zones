@@ -180,7 +180,7 @@ with col2:
     st.subheader("Good Environmental Status")
     stats = lst_mean.reduceRegion(
     reducer=ee.Reducer.minMax(),
-    geometry=region.geometry(),
+    geometry=outer_band.geometry(),
     scale=1000,
     maxPixels=1e13
     )
