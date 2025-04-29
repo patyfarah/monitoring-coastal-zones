@@ -223,6 +223,9 @@ with col1:
         .where(GES.gt(0.6).And(GES.lte(0.8)), 4) \
         .where(GES.gt(0.8), 5)
 
+    st.write("GES class preview:", GES_class.getInfo())
+
+
     # Histogram: Pixel count per GES class
     histogram = GES_class.reduceRegion(
         reducer=ee.Reducer.frequencyHistogram(),
@@ -273,7 +276,12 @@ with col2:
 
     st.subheader("GES Class Distribution")
     
-    ges_hist_dict = histogram.getInfo()
+    try:
+        ges_hist_dict = histogram.getInfo()
+    except Exception as e:
+        ges_hist_dict = None
+        st.error(f"Error fetching GES histogram: {e}")
+
     
     if ges_hist_dict:
         # Convert to pandas DataFrame
