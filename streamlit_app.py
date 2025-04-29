@@ -200,6 +200,7 @@ with col2:
     maxPixels=1e13
     )
     
-    st.write(stats.getInfo())
+    st.title("Mean Temperature Statistics (°C)")
+    st.json(stats.getInfo())
 
     st.markdown('</div>', unsafe_allow_html=True)
