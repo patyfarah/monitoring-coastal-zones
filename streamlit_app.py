@@ -135,7 +135,7 @@ with col1:
     start_date = f"{int(start_year_val)}-01-01"
     end_date = f"{int(end_year_val)}-12-31"
 
-    buffer_km = st.number_input("Coastal Buffer (km)", min_value=0, max_value=100, value=10)
+    buffer_km = st.number_input("Coastal Buffer (km)", min_value=1, max_value=100, value=10)
 
     # Filter country geometry
     countries = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017")
