@@ -72,8 +72,8 @@ vis_params = {
 }
 
 lst_params = {
-    'min': 10,
-    'max': 40,
+    'min': 12,
+    'max': 52,
     'palette': ['blue', 'green', 'yellow', 'red']
 }
 
