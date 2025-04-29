@@ -79,7 +79,7 @@ lst_params = {
 
 def mask_lst(image):
     qc = image.select('QC_Day')
-    good_mask = qc.lte(2)  # QC_Day <= 2 indicates good quality
+    good_mask = qc.lte(1)  # QC_Day <= 1 indicates good quality
 
     lst_celsius = image.select('LST_Day_1km') \
                        .updateMask(good_mask) \
