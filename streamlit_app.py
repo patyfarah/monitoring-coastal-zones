@@ -194,11 +194,11 @@ with col2:
     Map.to_streamlit(height=500)
 
     stats = lst_mean.reduceRegion(
-    reducer=ee.Reducer.minMax(),
-    geometry=region.geometry(),
-    scale=1000,
-    maxPixels=1e13
-    )
+        reducer=ee.Reducer.minMax(),
+        geometry=region.geometry(),
+        scale=1000,
+        maxPixels=1e13
+        )
     
     st.title("Mean Temperature Statistics (°C)")
     st.json(stats.getInfo())
