@@ -222,12 +222,9 @@ with col1:
         .where(GES.gt(0.4).And(GES.lte(0.6)), 3) \
         .where(GES.gt(0.6).And(GES.lte(0.8)), 4) \
         .where(GES.gt(0.8), 5)
-
-    st.write("GES class preview:", GES_class.getInfo())
   
     if st.button("Export to Drive"):
         export_ndvi_to_drive()
-
   
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -240,8 +237,6 @@ with col2:
     
     Map.addLayer(ndvi_mean, vis_params, 'Mean NDVI', shown=False)
     Map.addLayer(lst_mean, lst_params, 'Mean LST', shown=False)
-    #GES_palette = ['red', 'orange', 'yellow', 'lightgreen', 'green']
-    #Map.addLayer(GES_class, {'min': 1, 'max': 5, 'palette': GES_palette}, 'GES Classified')
     Map.addLayer(filtered.style(**{
         "color": "black",
         "fillColor": "00000000",
@@ -249,17 +244,6 @@ with col2:
     }), {}, f"{country} Border")
     
     Map.centerObject(filtered)
-    
-    legend_labels = [
-    "Very Poor (1)", 
-    "Poor (2)", 
-    "Moderate (3)", 
-    "Good (4)", 
-    "Very Good (5)"
-    ]
-    legend_colors = ['red', 'orange', 'yellow', 'lightgreen', 'green']   
-    #add_legend(Map, "GES Categories", legend_labels, legend_colors)
-
     Map.to_streamlit(height=500)
    
     st.markdown('</div>', unsafe_allow_html=True)
