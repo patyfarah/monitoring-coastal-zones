@@ -5,8 +5,6 @@ import streamlit as st
 import ee
 import geemap.foliumap as geemap
 from google.oauth2 import service_account
-import pandas as pd
-import altair as alt
 #--------------------------------------------------------
 # Initialization
 #-------------------------------------------------------
