@@ -224,19 +224,7 @@ with col1:
         .where(GES.gt(0.8), 5)
 
     st.write("GES class preview:", GES_class.getInfo())
-
-
-    # Histogram: Pixel count per GES class
-    histogram = GES_class.reduceRegion(
-        reducer=ee.Reducer.frequencyHistogram(),
-        geometry=outer_band,
-        scale=1000,  # Increase scale to reduce sample size
-        numPixels=1000,  # Reduce to safe number
-        seed=42,
-        geometries=False
-)
-
-    
+  
     if st.button("Export to Drive"):
         export_ndvi_to_drive()
 
