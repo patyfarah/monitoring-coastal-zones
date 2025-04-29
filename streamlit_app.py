@@ -86,8 +86,8 @@ def mask_lst(image, valid_qc_values=[0,1,2]):
 
 def mask_ndvi(image):
     qa = image.select('SummaryQA')
-    good = qa.lte(1)  # Good or marginal pixels
-    ndvi = image.select('NDVI').multiply(0.0001)  # SCALE NDVI
+    good = qa.lte(1)  
+    ndvi = image.select('NDVI').multiply(0.0001)
     return ndvi.updateMask(good)
 
 def get_image_collection(collection_dict, product, region, start_date, end_date, mask_func):
@@ -155,8 +155,6 @@ with col1:
     lst = get_image_collection(
         LST_PRODUCTS, lst_product, region, start_date, end_date, mask_lst
     )
-    # Apply the masking function
-    good_lst = lst.map(mask_lst)
     
     # Convert LST from scaled integer to Kelvin
     lst_cel = good_lst.select('LST_Day_1km').map(lambda img: img.multiply(0.02).copyProperties(img, img.propertyNames()))
