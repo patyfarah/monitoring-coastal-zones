@@ -200,6 +200,6 @@ with col2:
     maxPixels=1e13
     )
     
-    print(stats.getInfo())
+    st.write(stats.getInfo())
 
     st.markdown('</div>', unsafe_allow_html=True)
