@@ -178,8 +178,6 @@ with col1:
 # Right Panel
 with col2:
     st.subheader("Good Environmental Status")
-    st.markdown('<div class="right-column">', unsafe_allow_html=True)
-
     stats = lst_mean.reduceRegion(
     reducer=ee.Reducer.minMax(),
     geometry=region.geometry(),
@@ -188,8 +186,8 @@ with col2:
     )
     st.write("Mean Temperature Statistics (°C)")
     st.json(stats.getInfo())
-
-     
+    st.markdown('<div class="right-column">', unsafe_allow_html=True)
+   
     Map = geemap.Map(zoom=6, draw_ctrl=False)
     
     Map.addLayer(ndvi_mean, vis_params, 'Mean NDVI', shown=False)
