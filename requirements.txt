@@ -4,4 +4,5 @@ earthengine-api
 google-auth
 pandas 
 matplotlib
+altair 
 
