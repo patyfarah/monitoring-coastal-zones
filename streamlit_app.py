@@ -75,7 +75,7 @@ vis_params = {
 lst_params = {
     'min': -10,    # 0°C
     'max': 50,   # 50°C
-    'palette': ['blue', 'cyan', 'yellow', 'red']
+    'palette': ['blue', 'cyan', 'yellow', 'red']}
 
 def mask_lst(image, valid_qc_values=[0,1,2]):
     QA = image.select('QC_Day')
