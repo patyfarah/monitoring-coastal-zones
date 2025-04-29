@@ -180,7 +180,7 @@ with col2:
     Map = geemap.Map(zoom=6, draw_ctrl=False)
     
     Map.addLayer(ndvi_mean, vis_params, 'Mean NDVI', shown=False)
-    Map.addLayer(lst_mean, lst_params, 'Mean LST', shown=False)
+    Map.addLayer(lst_mean, lstVis, 'Mean LST', shown=False)
     Map.addLayer(filtered.style(**{
         "color": "black",
         "fillColor": "00000000",
