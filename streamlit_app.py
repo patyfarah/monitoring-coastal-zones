@@ -106,6 +106,32 @@ def get_image_collection(collection_dict, product, region, start_date, end_date,
     collection = collection.map(mask_func)
     return collection
 
+def add_legend(map_object, title, labels, colors, position='bottomright'):
+    """Adds a custom legend to a geemap Map."""
+    import branca.colormap as cm
+
+    html = f"<b>{title}</b><br>"
+    for label, color in zip(labels, colors):
+        html += f"<i style='background:{color};width:10px;height:10px;display:inline-block;margin-right:5px;'></i>{label}<br>"
+
+    map_object.add_child(
+        folium.map.CustomPane("legend")
+    )
+    map_object.get_root().html.add_child(folium.Element(f"""
+        <div style="
+            position: absolute;
+            {position}: 10px;
+            z-index: 9999;
+            background-color: white;
+            padding: 10px;
+            border:2px solid grey;
+            font-size:12px;
+            ">
+            {html}
+        </div>
+    """))
+
+
 #---------------------------------------------------------------
 # Streamlit Structure
 #--------------------------------------------------------------
@@ -167,6 +193,34 @@ with col1:
     ndvi_mean = ndvi.median().clip(outer_band) 
     lst_mean = lst.mean().clip(outer_band)
 
+        # Normalize NDVI and LST
+    ndvi_minmax = ndvi_mean.reduceRegion(
+        reducer=ee.Reducer.minMax(), geometry=outer_band, scale=250, maxPixels=1e13
+    )
+    ndvi_min = ee.Number(ndvi_minmax.get('NDVI_min'))
+    ndvi_max = ee.Number(ndvi_minmax.get('NDVI_max'))
+    
+    lst_minmax = lst_mean.reduceRegion(
+        reducer=ee.Reducer.minMax(), geometry=outer_band, scale=250, maxPixels=1e13
+    )
+    lst_min = ee.Number(lst_minmax.get('LST_Day_1km_min'))
+    lst_max = ee.Number(lst_minmax.get('LST_Day_1km_max'))
+    
+    # Normalize NDVI and LST
+    ndvi_normal = ndvi_mean.subtract(ndvi_min).divide(ndvi_max.subtract(ndvi_min))
+    lst_normal = lst_mean.subtract(lst_min).divide(lst_max.subtract(lst_min))
+    
+    # Calculate GES
+    GES = ndvi_normal.multiply(0.5).add(lst_normal.multiply(0.5))
+
+    # 5 classes (equal intervals)
+    GES_class = GES.multiply(100).int() \
+        .where(GES.lte(0.2), 1) \
+        .where(GES.gt(0.2).And(GES.lte(0.4)), 2) \
+        .where(GES.gt(0.4).And(GES.lte(0.6)), 3) \
+        .where(GES.gt(0.6).And(GES.lte(0.8)), 4) \
+        .where(GES.gt(0.8), 5)
+
   
     
     if st.button("Export to Drive"):
@@ -184,6 +238,8 @@ with col2:
     
     Map.addLayer(ndvi_mean, vis_params, 'Mean NDVI', shown=False)
     Map.addLayer(lst_mean, lst_params, 'Mean LST', shown=False)
+    GES_palette = ['red', 'orange', 'yellow', 'lightgreen', 'green']
+    Map.addLayer(GES_class, {'min': 1, 'max': 5, 'palette': GES_palette}, 'GES Classified')
     Map.addLayer(filtered.style(**{
         "color": "black",
         "fillColor": "00000000",
@@ -191,6 +247,17 @@ with col2:
     }), {}, f"{country} Border")
     
     Map.centerObject(filtered)
+    
+    legend_labels = [
+    "Very Poor (1)", 
+    "Poor (2)", 
+    "Moderate (3)", 
+    "Good (4)", 
+    "Very Good (5)"
+    ]
+    legend_colors = ['red', 'orange', 'yellow', 'lightgreen', 'green']   
+    add_legend(Map, "GES Categories", legend_labels, legend_colors)
+
     Map.to_streamlit(height=500)
    
     st.markdown('</div>', unsafe_allow_html=True)
