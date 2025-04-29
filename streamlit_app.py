@@ -76,6 +76,7 @@ lst_params = {
     'min': 10,
     'max': 40,
     'palette': ['blue', 'green', 'yellow', 'red']
+}
 
 def mask_lst(image):
     qc = image.select('QC_Day')
