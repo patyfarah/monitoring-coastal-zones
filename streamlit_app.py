@@ -179,6 +179,16 @@ with col1:
 with col2:
     st.subheader("Good Environmental Status")
     st.markdown('<div class="right-column">', unsafe_allow_html=True)
+
+    stats = lst_mean.reduceRegion(
+    reducer=ee.Reducer.minMax(),
+    geometry=region.geometry(),
+    scale=1000,
+    maxPixels=1e13
+    )
+    st.title("Mean Temperature Statistics (°C)")
+    st.json(stats.getInfo())
+
      
     Map = geemap.Map(zoom=6, draw_ctrl=False)
     
@@ -193,14 +203,6 @@ with col2:
     Map.centerObject(filtered)
     Map.to_streamlit(height=500)
 
-    stats = lst_mean.reduceRegion(
-        reducer=ee.Reducer.minMax(),
-        geometry=region.geometry(),
-        scale=1000,
-        maxPixels=1e13
-        )
-    
-    st.title("Mean Temperature Statistics (°C)")
-    st.json(stats.getInfo())
 
+    
     st.markdown('</div>', unsafe_allow_html=True)
