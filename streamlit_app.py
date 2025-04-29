@@ -222,6 +222,31 @@ with col1:
         .where(GES.gt(0.4).And(GES.lte(0.6)), 3) \
         .where(GES.gt(0.6).And(GES.lte(0.8)), 4) \
         .where(GES.gt(0.8), 5)
+    # Get histogram of GES classes in the outer_band area
+    ges_histogram = GES_class.reduceRegion(
+        reducer=ee.Reducer.frequencyHistogram(),
+        geometry=outer_band,
+        scale=250,
+        maxPixels=1e13
+    )
+    
+    # Extract and sort histogram dictionary
+    ges_hist_dict = ges_histogram.getInfo().get('constant', {})
+    sorted_classes = sorted(ges_hist_dict.items())
+    classes = [str(k) for k, _ in sorted_classes]
+    counts = [v for _, v in sorted_classes]
+    
+    # Plot with matplotlib
+    import matplotlib.pyplot as plt
+    
+    fig, ax = plt.subplots()
+    ax.bar(classes, counts, color='skyblue')
+    ax.set_xlabel("GES Class")
+    ax.set_ylabel("Pixel Count")
+    ax.set_title("GES Class Distribution (Outer Coastal Band)")
+    
+    st.pyplot(fig)
+
   
     if st.button("Export to Drive"):
         export_ndvi_to_drive()
