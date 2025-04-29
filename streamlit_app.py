@@ -77,15 +77,17 @@ lst_params = {
     'max': 50,   # 50°C
     'palette': ['blue', 'cyan', 'yellow', 'red']}
 
-def mask_lst(image, valid_qc_values=[0,1,2]):
-      var qc = img.select('QC_Day');
-      var goodMask = qc.lte(1);  // Good quality
-      var temp = img.select('LST_Day_1km')
-                    .updateMask(goodMask) // Mask bad pixels
-                    .multiply(0.02)       // Scale factor for MOD11A1
-                    .subtract(273.15)     // Convert Kelvin to Celsius
-                    .copyProperties(img, ['system:time_start']); // Preserve date
-      return temp;
+def mask_lst(image):
+    qc = image.select('QC_Day')
+    good_mask = qc.lte(1)  # QC_Day <= 1 indicates good quality
+
+    lst_celsius = image.select('LST_Day_1km') \
+                       .updateMask(good_mask) \
+                       .multiply(0.02) \
+                       .subtract(273.15) \
+                       .copyProperties(image, ['system:time_start'])
+
+    return lst_celsius
 
 
 def mask_ndvi(image):
