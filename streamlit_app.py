@@ -5,6 +5,8 @@ import streamlit as st
 import ee
 import geemap.foliumap as geemap
 from google.oauth2 import service_account
+import pandas as pd
+import altair as alt
 #--------------------------------------------------------
 # Initialization
 #-------------------------------------------------------
@@ -221,7 +223,14 @@ with col1:
         .where(GES.gt(0.6).And(GES.lte(0.8)), 4) \
         .where(GES.gt(0.8), 5)
 
-  
+    # Histogram: Pixel count per GES class
+    histogram = GES_class.reduceRegion(
+        reducer=ee.Reducer.frequencyHistogram(),
+        geometry=outer_band,
+        scale=250,
+        maxPixels=1e13
+)
+
     
     if st.button("Export to Drive"):
         export_ndvi_to_drive()
@@ -256,8 +265,35 @@ with col2:
     "Very Good (5)"
     ]
     legend_colors = ['red', 'orange', 'yellow', 'lightgreen', 'green']   
-    add_legend(Map, "GES Categories", legend_labels, legend_colors)
+    #add_legend(Map, "GES Categories", legend_labels, legend_colors)
 
     Map.to_streamlit(height=500)
    
     st.markdown('</div>', unsafe_allow_html=True)
+
+    st.subheader("GES Class Distribution")
+    
+    ges_hist_dict = histogram.getInfo()
+    
+    if ges_hist_dict:
+        # Convert to pandas DataFrame
+        df = pd.DataFrame(list(ges_hist_dict.items()), columns=['Class', 'Count'])
+        df['Class'] = df['Class'].astype(int)
+        df = df.sort_values('Class')
+    
+        # Bar chart using Altair
+        chart = alt.Chart(df).mark_bar().encode(
+            x=alt.X('Class:O', title='GES Category'),
+            y=alt.Y('Count:Q', title='Pixel Count'),
+            color=alt.Color('Class:N', scale=alt.Scale(domain=[1,2,3,4,5],
+                                                       range=['red', 'orange', 'yellow', 'lightgreen', 'green']))
+        ).properties(
+            width=500,
+            height=300,
+            title="GES Category Distribution"
+        )
+    
+        st.altair_chart(chart, use_container_width=True)
+    else:
+        st.warning("Histogram data not available.")
+
