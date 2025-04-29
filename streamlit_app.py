@@ -159,7 +159,7 @@ with col1:
     good_lst = lst.map(mask_lst)
     
     # Convert LST from scaled integer to Kelvin
-    lst_cel = good_lst.select('LST_Day_1km').map(lambda img: img.multiply(0.02).substract(273.15).copyProperties(img, img.propertyNames()))
+    lst_cel = good_lst.select('LST_Day_1km').map(lambda img: img.multiply(0.02).copyProperties(img, img.propertyNames()))
 
     
     # Mean data
