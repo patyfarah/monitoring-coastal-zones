@@ -186,7 +186,7 @@ with col2:
     scale=1000,
     maxPixels=1e13
     )
-    st.title("Mean Temperature Statistics (°C)")
+    st.write("Mean Temperature Statistics (°C)")
     st.json(stats.getInfo())
 
      
