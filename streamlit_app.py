@@ -178,7 +178,7 @@ with col1:
 # Right Panel
 with col2:
     st.subheader("Good Environmental Status")
-    st.write("Mean Temperature Statistics (°C)")
+    st.markdown("Mean Temperature Statistics (°C)")
     stats = lst_mean.reduceRegion(
     reducer=ee.Reducer.minMax(),
     geometry=outer_band.geometry(),
