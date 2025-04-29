@@ -108,30 +108,6 @@ def get_image_collection(collection_dict, product, region, start_date, end_date,
     collection = collection.map(mask_func)
     return collection
 
-def add_legend(map_object, title, labels, colors, position='bottomright'):
-    """Adds a custom legend to a geemap Map."""
-    import branca.colormap as cm
-
-    html = f"<b>{title}</b><br>"
-    for label, color in zip(labels, colors):
-        html += f"<i style='background:{color};width:10px;height:10px;display:inline-block;margin-right:5px;'></i>{label}<br>"
-
-    map_object.add_child(
-        folium.map.CustomPane("legend")
-    )
-    map_object.get_root().html.add_child(folium.Element(f"""
-        <div style="
-            position: absolute;
-            {position}: 10px;
-            z-index: 9999;
-            background-color: white;
-            padding: 10px;
-            border:2px solid grey;
-            font-size:12px;
-            ">
-            {html}
-        </div>
-    """))
 
 
 #---------------------------------------------------------------
@@ -222,6 +198,7 @@ with col1:
         .where(GES.gt(0.4).And(GES.lte(0.6)), 3) \
         .where(GES.gt(0.6).And(GES.lte(0.8)), 4) \
         .where(GES.gt(0.8), 5)
+    
     # Get histogram of GES classes in the outer_band area
     ges_histogram = GES_class.reduceRegion(
         reducer=ee.Reducer.frequencyHistogram(),
