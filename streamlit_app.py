@@ -160,13 +160,10 @@ with col1:
         LST_PRODUCTS, lst_product, region, start_date, end_date, mask_lst
     )
     
-    # Convert LST from scaled integer to Kelvin
-    lst_cel = lst.select('LST_Day_1km').map(lambda img: img.multiply(0.02).copyProperties(img, img.propertyNames()))
-
     
     # Mean data
     ndvi_mean = ndvi.median().clip(outer_band) 
-    lst_mean = lst_cel.mean().clip(outer_band)
+    lst_mean = lst.mean().clip(outer_band)
 
   
     
@@ -184,7 +181,7 @@ with col2:
     Map = geemap.Map(zoom=6, draw_ctrl=False)
     
     Map.addLayer(ndvi_mean, vis_params, 'Mean NDVI', shown=False)
-    Map.addLayer(lst_mean, lstVis, 'Mean LST', shown=False)
+    Map.addLayer(lst_mean, lst_params, 'Mean LST', shown=False)
     Map.addLayer(filtered.style(**{
         "color": "black",
         "fillColor": "00000000",
