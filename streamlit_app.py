@@ -178,15 +178,6 @@ with col1:
 # Right Panel
 with col2:
     st.subheader("Good Environmental Status")
-    st.markdown("Mean Temperature Statistics (°C)")
-    stats = lst_mean.reduceRegion(
-    reducer=ee.Reducer.minMax(),
-    geometry=outer_band,
-    scale=1000,
-    maxPixels=1e13
-    )
-    
-    st.json(stats.getInfo())
     st.markdown('<div class="right-column">', unsafe_allow_html=True)
    
     Map = geemap.Map(zoom=6, draw_ctrl=False)
