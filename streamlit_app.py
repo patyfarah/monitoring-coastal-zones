@@ -203,7 +203,7 @@ with col1:
     ges_histogram = GES_class.reduceRegion(
         reducer=ee.Reducer.frequencyHistogram(),
         geometry=outer_band,
-        scale=250,
+        scale=1000,
         maxPixels=1e13
     )
     
