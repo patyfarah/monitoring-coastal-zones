@@ -193,7 +193,7 @@ with col1:
     ndvi_mean = ndvi.median().clip(outer_band) 
     lst_mean = lst.mean().clip(outer_band)
 
-        # Normalize NDVI and LST
+    # Normalize NDVI and LST
     ndvi_minmax = ndvi_mean.reduceRegion(
         reducer=ee.Reducer.minMax(), geometry=outer_band, scale=250, maxPixels=1e13
     )
@@ -238,8 +238,8 @@ with col2:
     
     Map.addLayer(ndvi_mean, vis_params, 'Mean NDVI', shown=False)
     Map.addLayer(lst_mean, lst_params, 'Mean LST', shown=False)
-    GES_palette = ['red', 'orange', 'yellow', 'lightgreen', 'green']
-    Map.addLayer(GES_class, {'min': 1, 'max': 5, 'palette': GES_palette}, 'GES Classified')
+    #GES_palette = ['red', 'orange', 'yellow', 'lightgreen', 'green']
+    #Map.addLayer(GES_class, {'min': 1, 'max': 5, 'palette': GES_palette}, 'GES Classified')
     Map.addLayer(filtered.style(**{
         "color": "black",
         "fillColor": "00000000",
