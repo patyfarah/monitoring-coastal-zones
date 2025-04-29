@@ -276,34 +276,54 @@ with col2:
    
     st.markdown('</div>', unsafe_allow_html=True)
 
-    st.subheader("GES Class Distribution")
+    if Map.user_roi is not None:
+        user_geom = Map.user_roi.geometry()
     
-    try:
-        ges_hist_dict = histogram.getInfo()
-    except Exception as e:
-        ges_hist_dict = None
-        st.error(f"Error fetching GES histogram: {e}")
-
+        # Clip GES image to user polygon
+        ges_drawn = GES_class.clip(user_geom)
     
-    if ges_hist_dict:
-        # Convert to pandas DataFrame
-        df = pd.DataFrame(list(ges_hist_dict.items()), columns=['Class', 'Count'])
-        df['Class'] = df['Class'].astype(int)
-        df = df.sort_values('Class')
-    
-        # Bar chart using Altair
-        chart = alt.Chart(df).mark_bar().encode(
-            x=alt.X('Class:O', title='GES Category'),
-            y=alt.Y('Count:Q', title='Pixel Count'),
-            color=alt.Color('Class:N', scale=alt.Scale(domain=[1,2,3,4,5],
-                                                       range=['red', 'orange', 'yellow', 'lightgreen', 'green']))
-        ).properties(
-            width=500,
-            height=300,
-            title="GES Category Distribution"
+        # Sample points inside drawn polygon
+        samples = ges_drawn.addBands(ee.Image.pixelCoordinates()).sample(
+            region=user_geom,
+            scale=1000,
+            numPixels=1000,
+            seed=42,
+            geometries=False
         )
     
-        st.altair_chart(chart, use_container_width=True)
+        # Group and get histogram
+        hist = samples.reduceColumns(
+            reducer=ee.Reducer.frequencyHistogram(),
+            selectors=['GES_class']
+        )
+    
+        try:
+            ges_hist_dict = hist.get('histogram').getInfo()
+            st.subheader("GES Distribution for Drawn Area")
+    
+            import pandas as pd
+            import altair as alt
+    
+            df = pd.DataFrame(list(ges_hist_dict.items()), columns=['Class', 'Count'])
+            df['Class'] = df['Class'].astype(int)
+            df = df.sort_values('Class')
+    
+            chart = alt.Chart(df).mark_bar().encode(
+                x=alt.X('Class:O', title='GES Category'),
+                y=alt.Y('Count:Q', title='Pixel Count'),
+                color=alt.Color('Class:N', scale=alt.Scale(domain=[1,2,3,4,5],
+                                                           range=['red', 'orange', 'yellow', 'lightgreen', 'green']))
+            ).properties(
+                width=500,
+                height=300,
+                title="GES Class Distribution (Drawn Area)"
+            )
+    
+            st.altair_chart(chart, use_container_width=True)
+    
+        except Exception as e:
+            st.error(f"Error computing GES distribution: {e}")
     else:
-        st.warning("Histogram data not available.")
+        st.info("Draw a polygon on the map to calculate GES.")
+
 
