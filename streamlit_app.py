@@ -181,7 +181,7 @@ with col2:
     st.markdown("Mean Temperature Statistics (°C)")
     stats = lst_mean.reduceRegion(
     reducer=ee.Reducer.minMax(),
-    geometry=region.geometry(),
+    geometry=region,
     scale=1000,
     maxPixels=1e13
     )
