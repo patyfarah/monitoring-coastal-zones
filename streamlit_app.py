@@ -230,8 +230,10 @@ with col1:
     histogram = GES_class.reduceRegion(
         reducer=ee.Reducer.frequencyHistogram(),
         geometry=outer_band,
-        scale=250,
-        maxPixels=1e13
+        scale=1000,  # Increase scale to reduce sample size
+        numPixels=1000,  # Reduce to safe number
+        seed=42,
+        geometries=False
 )
 
     
