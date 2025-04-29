@@ -193,4 +193,13 @@ with col2:
     Map.centerObject(filtered)
     Map.to_streamlit(height=500)
 
+    stats = lst_mean.reduceRegion(
+    reducer=ee.Reducer.minMax(),
+    geometry=region.geometry(),
+    scale=1000,
+    maxPixels=1e13
+    )
+    
+    print(stats.getInfo())
+
     st.markdown('</div>', unsafe_allow_html=True)
