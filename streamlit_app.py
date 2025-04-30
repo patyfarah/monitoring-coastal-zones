@@ -212,10 +212,8 @@ with col2:
     st.subheader("Good Environmental Status")
     st.markdown('<div class="right-column">', unsafe_allow_html=True)
    
-    Map = geemap.Map(zoom=6)
-
-
-    
+    Map = geemap.Map(zoom=6,draw_ctrl = True, data_ctrl=True)
+   
     Map.addLayer(ndvi_mean, vis_params, 'Mean NDVI', shown=False)
     Map.addLayer(lst_mean, lst_params, 'Mean LST', shown=False)
     Map.addLayer(filtered.style(**{
@@ -241,7 +239,8 @@ with col2:
         draw.add_to(Map)
 
     # Show the map and capture draw events
-    st_data = st_folium(returned_objects=["last_draw"])
+    with st.expander("Click to open map and draw", expanded=False):
+        st_data = st_folium(m, height=300, width=500, returned_objects=["last_draw"])
 
     # Handle draw result
     if st_data.get("last_draw") is not None:
