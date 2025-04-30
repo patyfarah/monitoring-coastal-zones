@@ -241,7 +241,7 @@ with col2:
         draw.add_to(Map)
 
     # Show the map and capture draw events
-    st_data = st_folium(Map, height=500, width=700, returned_objects=["last_draw"])
+    st_data = st_folium(returned_objects=["last_draw"])
 
     # Handle draw result
     if st_data.get("last_draw") is not None:
