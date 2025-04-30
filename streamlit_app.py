@@ -240,7 +240,7 @@ with col2:
 
     # Show the map and capture draw events
     with st.expander("Click to open map and draw", expanded=False):
-        st_data = st_folium(m, height=300, width=500, returned_objects=["last_draw"])
+        st_data = st_folium(Map, height=300, width=500, returned_objects=["last_draw"])
 
     # Handle draw result
     if st_data.get("last_draw") is not None:
