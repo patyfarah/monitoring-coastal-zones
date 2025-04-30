@@ -213,7 +213,7 @@ with col1:
     edit_options={"edit": True}
     )
         
-    st_data = st_folium(m, height=500, width=700, returned_objects=["last_draw"])
+    st_data = st_folium(Map, height=500, width=700, returned_objects=["last_draw"])
     if st_data.get("last_draw") is not None:
         geometry = st_data["last_draw"]["geometry"]
         ee_geom = geemap.geojson_to_ee(geometry)
