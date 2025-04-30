@@ -201,6 +201,18 @@ with col1:
         .where(GES.gt(0.6).And(GES.lte(0.8)), 4) \
         .where(GES.gt(0.8), 5)
 
+        
+    if st.button("Export to Drive"):
+        export_ndvi_to_drive()
+  
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# Right Panel
+with col2:
+    st.subheader("Good Environmental Status")
+    st.markdown('<div class="right-column">', unsafe_allow_html=True)
+   
+    Map = geemap.Map(zoom=6, draw_ctrl=False)
     draw = Draw(
     export=False,
     draw_options={
@@ -219,18 +231,6 @@ with col1:
         ee_geom = geemap.geojson_to_ee(geometry)
         image = ee.Image("MODIS/061/MOD13A2").select("NDVI")
         clipped = image.clip(ee_geom)
-    
-    if st.button("Export to Drive"):
-        export_ndvi_to_drive()
-  
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# Right Panel
-with col2:
-    st.subheader("Good Environmental Status")
-    st.markdown('<div class="right-column">', unsafe_allow_html=True)
-   
-    Map = geemap.Map(zoom=6, draw_ctrl=False)
     
     Map.addLayer(ndvi_mean, vis_params, 'Mean NDVI', shown=False)
     Map.addLayer(lst_mean, lst_params, 'Mean LST', shown=False)
