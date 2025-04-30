@@ -226,18 +226,18 @@ with col2:
     
     Map.centerObject(filtered)
     if st.button("Enable Drawing"):
-    # Add draw control
-    draw = Draw(
-        export=False,
-        draw_options={
-            "polyline": False,
-            "polygon": True,
-            "circle": False,
-            "rectangle": True,
-            "marker": False,
-        },
-        edit_options={"edit": True}
-    )
+        # Add draw control
+        draw = Draw(
+            export=False,
+            draw_options={
+                "polyline": False,
+                "polygon": True,
+                "circle": False,
+                "rectangle": True,
+                "marker": False,
+            },
+            edit_options={"edit": True}
+        )
     draw.add_to(Map)
 
     # Show the map and capture draw events
