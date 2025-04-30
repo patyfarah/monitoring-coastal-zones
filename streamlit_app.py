@@ -213,24 +213,31 @@ with col2:
     st.markdown('<div class="right-column">', unsafe_allow_html=True)
    
     Map = geemap.Map(zoom=6, draw_ctrl=False)
+
+if st.button("Enable Drawing"):
+    # Add draw control
     draw = Draw(
-    export=False,
-    draw_options={
-        "polyline": False,
-        "polygon": True,
-        "circle": False,
-        "rectangle": True,
-        "marker": False,
-    },
-    edit_options={"edit": True}
+        export=False,
+        draw_options={
+            "polyline": False,
+            "polygon": True,
+            "circle": False,
+            "rectangle": True,
+            "marker": False,
+        },
+        edit_options={"edit": True}
     )
-        
+    draw.add_to(Map)
+
+    # Show the map and capture draw events
     st_data = st_folium(Map, height=500, width=700, returned_objects=["last_draw"])
+
+    # Handle draw result
     if st_data.get("last_draw") is not None:
         geometry = st_data["last_draw"]["geometry"]
         ee_geom = geemap.geojson_to_ee(geometry)
-        image = ee.Image("MODIS/061/MOD13A2").select("NDVI")
-        clipped = image.clip(ee_geom)
+        clipped = GES.clip(ee_geom)
+    
     
     Map.addLayer(ndvi_mean, vis_params, 'Mean NDVI', shown=False)
     Map.addLayer(lst_mean, lst_params, 'Mean LST', shown=False)
