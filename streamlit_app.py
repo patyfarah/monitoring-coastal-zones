@@ -238,7 +238,7 @@ with col2:
             },
             edit_options={"edit": True}
         )
-    draw.add_to(Map)
+        draw.add_to(Map)
 
     # Show the map and capture draw events
     st_data = st_folium(Map, height=500, width=700, returned_objects=["last_draw"])
