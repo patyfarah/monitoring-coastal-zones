@@ -5,6 +5,10 @@ import streamlit as st
 import ee
 import geemap.foliumap as geemap
 from google.oauth2 import service_account
+import folium
+from folium.plugins import Draw
+from streamlit_folium import st_folium
+from shapely.geometry import shape
 #--------------------------------------------------------
 # Initialization
 #-------------------------------------------------------
@@ -196,7 +200,26 @@ with col1:
         .where(GES.gt(0.4).And(GES.lte(0.6)), 3) \
         .where(GES.gt(0.6).And(GES.lte(0.8)), 4) \
         .where(GES.gt(0.8), 5)
-       
+
+    draw = Draw(
+    export=False,
+    draw_options={
+        "polyline": False,
+        "polygon": True,
+        "circle": False,
+        "rectangle": True,
+        "marker": False,
+    },
+    edit_options={"edit": True}
+    )
+        
+    st_data = st_folium(m, height=500, width=700, returned_objects=["last_draw"])
+    if st_data.get("last_draw") is not None:
+        geometry = st_data["last_draw"]["geometry"]
+        ee_geom = geemap.geojson_to_ee(geometry)
+        image = ee.Image("MODIS/061/MOD13A2").select("NDVI")
+        clipped = image.clip(ee_geom)
+    
     if st.button("Export to Drive"):
         export_ndvi_to_drive()
   
