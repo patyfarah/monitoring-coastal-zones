@@ -3,5 +3,8 @@ geemap
 earthengine-api
 google-auth
 pandas 
+geemap.folium_map
+folium
+folium.plugins.Draw
 
 
