@@ -225,7 +225,7 @@ with col2:
     }), {}, f"{country} Border")
     
     Map.centerObject(filtered)
-    if st.button("Enable Drawing"):
+    if st.toggle("Draw Mode"):
         # Add draw control
         draw = Draw(
             export=False,
