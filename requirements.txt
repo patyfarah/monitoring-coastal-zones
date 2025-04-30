@@ -4,5 +4,6 @@ earthengine-api
 google-auth
 pandas 
 folium
+streamlit_folium
 
 
