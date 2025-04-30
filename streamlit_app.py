@@ -212,9 +212,20 @@ with col2:
     st.subheader("Good Environmental Status")
     st.markdown('<div class="right-column">', unsafe_allow_html=True)
    
-    Map = geemap.Map(zoom=6, draw_ctrl=False)
+    Map = geemap.Map(zoom=6)
 
-if st.button("Enable Drawing"):
+
+    
+    Map.addLayer(ndvi_mean, vis_params, 'Mean NDVI', shown=False)
+    Map.addLayer(lst_mean, lst_params, 'Mean LST', shown=False)
+    Map.addLayer(filtered.style(**{
+        "color": "black",
+        "fillColor": "00000000",
+        "width": 2
+    }), {}, f"{country} Border")
+    
+    Map.centerObject(filtered)
+    if st.button("Enable Drawing"):
     # Add draw control
     draw = Draw(
         export=False,
@@ -238,16 +249,6 @@ if st.button("Enable Drawing"):
         ee_geom = geemap.geojson_to_ee(geometry)
         clipped = GES.clip(ee_geom)
     
-    
-    Map.addLayer(ndvi_mean, vis_params, 'Mean NDVI', shown=False)
-    Map.addLayer(lst_mean, lst_params, 'Mean LST', shown=False)
-    Map.addLayer(filtered.style(**{
-        "color": "black",
-        "fillColor": "00000000",
-        "width": 2
-    }), {}, f"{country} Border")
-    
-    Map.centerObject(filtered)
     Map.to_streamlit(height=500)
    
     st.markdown('</div>', unsafe_allow_html=True)
