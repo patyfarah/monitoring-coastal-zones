@@ -226,7 +226,7 @@ with col2:
     }), {}, f"{country} Border")
 
     # Add GES classification layer
-    Map.addLayer(GES_class, {
+    #Map.addLayer(GES_class, {
         'min': 1, 'max': 5,
         'palette': ['red', 'orange', 'yellow', 'lightgreen', 'green']
     }, 'GES Classification', shown=True)
