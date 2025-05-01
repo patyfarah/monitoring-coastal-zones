@@ -214,10 +214,11 @@ with col2:
    
     Map = geemap.Map(zoom=6, draw_ctrl=True, data_ctrl=True)
 
-    # Add layers
+    # Add NDVI and LST layers (optional, not shown by default)
     Map.addLayer(ndvi_mean, vis_params, 'Mean NDVI', shown=False)
     Map.addLayer(lst_mean, lst_params, 'Mean LST', shown=False)
-    Map.addLayer(GES_class, {'min': 1, 'max': 5, 'palette': ['red', 'orange', 'yellow', 'lightgreen', 'green']}, 'GES Class')
+
+    # Add country border
     Map.addLayer(filtered.style(**{
         "color": "black",
         "fillColor": "00000000",
@@ -265,3 +266,5 @@ with col2:
     Map.to_streamlit(height=500)
 
     st.markdown('</div>', unsafe_allow_html=True)
+
+
