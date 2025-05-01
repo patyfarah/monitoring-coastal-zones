@@ -246,7 +246,7 @@ with col2:
         geometry = st_data["last_draw"]["geometry"]
         ee_geom = geemap.geojson_to_ee(geometry)
         clipped = GES.clip(ee_geom)
-        Map.addLayer(clipped, {}, 'GES', shown=False)
+        Map.addLayer(clipped, {}, 'GES', shown=True)
     
     Map.to_streamlit(height=500)
    
