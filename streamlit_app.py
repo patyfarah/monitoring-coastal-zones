@@ -238,15 +238,15 @@ with col2:
         )
         draw.add_to(Map)
 
-    # Show the map and capture draw events
-    with st.expander("Click to open map and draw", expanded=False):
-        st_data = st_folium(Map, height=300, width=500, returned_objects=["last_draw"])
+
+    st_data = st_folium(Map, height=500, returned_objects=["last_draw"])
 
     # Handle draw result
     if st_data.get("last_draw") is not None:
         geometry = st_data["last_draw"]["geometry"]
         ee_geom = geemap.geojson_to_ee(geometry)
         clipped = GES.clip(ee_geom)
+        Map.addLayer(clipped, {}, 'GES', shown=False)
     
     Map.to_streamlit(height=500)
    
