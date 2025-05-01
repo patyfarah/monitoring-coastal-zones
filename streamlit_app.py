@@ -211,10 +211,10 @@ with col1:
 with col2:
     st.subheader("Good Environmental Status")
     st.markdown('<div class="right-column">', unsafe_allow_html=True)
-   
-    Map = geemap.Map(zoom=6, draw_ctrl=True, data_ctrl=True)
 
-    # Add NDVI and LST layers (optional, not shown by default)
+    Map = geemap.Map(zoom=6, draw_ctrl=False, data_ctrl=True)
+
+    # Add mean NDVI and LST layers (optional, hidden by default)
     Map.addLayer(ndvi_mean, vis_params, 'Mean NDVI', shown=False)
     Map.addLayer(lst_mean, lst_params, 'Mean LST', shown=False)
 
@@ -225,76 +225,19 @@ with col2:
         "width": 2
     }), {}, f"{country} Border")
 
-    # Center the map
+    # Add GES classification layer
+    Map.addLayer(GES_class, {
+        'min': 1, 'max': 5,
+        'palette': ['red', 'orange', 'yellow', 'lightgreen', 'green']
+    }, 'GES Classification', shown=True)
+
+    # Center the map and render
     Map.centerObject(filtered)
-
-    # Enable draw tool toggle
-    draw_mode = st.toggle("Draw Mode")
-    if draw_mode:
-        draw = Draw(
-            export=False,
-            draw_options={
-                "polyline": False,
-                "polygon": True,
-                "circle": False,
-                "rectangle": True,
-                "marker": False,
-            },
-            edit_options={"edit": True}
-        )
-        draw.add_to(Map)
-
-    # Get draw results
-    st_data = st_folium(Map, height=500, returned_objects=["last_draw"])
-
-    # Process geometry and clip GES entirely in GEE
-    if st_data.get("last_draw") is not None:
-        geometry = st_data["last_draw"]["geometry"]
-        if geometry:
-            # Convert to ee.Geometry
-            ee_geom = geemap.geojson_to_ee(geometry)
-
-            # Recalculate GES using drawn geometry as clipping region
-            ndvi_clip = ndvi.median().clip(ee_geom)
-            lst_clip = lst.mean().clip(ee_geom)
-
-            ndvi_minmax = ndvi_clip.reduceRegion(
-                reducer=ee.Reducer.minMax(), geometry=ee_geom, scale=250, maxPixels=1e13
-            )
-            ndvi_min = ee.Number(ndvi_minmax.get('NDVI_min'))
-            ndvi_max = ee.Number(ndvi_minmax.get('NDVI_max'))
-
-            lst_minmax = lst_clip.reduceRegion(
-                reducer=ee.Reducer.minMax(), geometry=ee_geom, scale=250, maxPixels=1e13
-            )
-            lst_min = ee.Number(lst_minmax.get('LST_Day_1km_min'))
-            lst_max = ee.Number(lst_minmax.get('LST_Day_1km_max'))
-
-            # Normalize
-            ndvi_normal = ndvi_clip.subtract(ndvi_min).divide(ndvi_max.subtract(ndvi_min))
-            lst_normal = lst_clip.subtract(lst_min).divide(lst_max.subtract(lst_min))
-
-            # GES Calculation
-            GES_clip = ndvi_normal.multiply(0.5).add(lst_normal.multiply(0.5))
-
-            # Classify into 5 categories
-            GES_class_clip = GES_clip.multiply(100).int() \
-                .where(GES_clip.lte(0.2), 1) \
-                .where(GES_clip.gt(0.2).And(GES_clip.lte(0.4)), 2) \
-                .where(GES_clip.gt(0.4).And(GES_clip.lte(0.6)), 3) \
-                .where(GES_clip.gt(0.6).And(GES_clip.lte(0.8)), 4) \
-                .where(GES_clip.gt(0.8), 5)
-
-            Map.addLayer(GES_class_clip, {
-                'min': 1, 'max': 5,
-                'palette': ['red', 'orange', 'yellow', 'lightgreen', 'green']
-            }, 'Clipped GES', shown=True)
-            st.success("Clipped GES displayed (server-side GEE processing).")
-
-    # Add layer control and render
     Map.add_child(folium.LayerControl())
     Map.to_streamlit(height=500)
+
     st.markdown('</div>', unsafe_allow_html=True)
+
 
 
 
