@@ -212,19 +212,24 @@ with col2:
     st.subheader("Good Environmental Status")
     st.markdown('<div class="right-column">', unsafe_allow_html=True)
    
-    Map = geemap.Map(zoom=6,draw_ctrl = True, data_ctrl=True)
-   
+    Map = geemap.Map(zoom=6, draw_ctrl=True, data_ctrl=True)
+
+    # Add layers
     Map.addLayer(ndvi_mean, vis_params, 'Mean NDVI', shown=False)
     Map.addLayer(lst_mean, lst_params, 'Mean LST', shown=False)
+    Map.addLayer(GES_class, {'min': 1, 'max': 5, 'palette': ['red', 'orange', 'yellow', 'lightgreen', 'green']}, 'GES Class')
     Map.addLayer(filtered.style(**{
         "color": "black",
         "fillColor": "00000000",
         "width": 2
     }), {}, f"{country} Border")
-    
+
+    # Center the map
     Map.centerObject(filtered)
-    if st.toggle("Draw Mode"):
-        # Add draw control
+
+    # Add draw tools if toggled
+    draw_mode = st.toggle("Draw Mode")
+    if draw_mode:
         draw = Draw(
             export=False,
             draw_options={
@@ -238,19 +243,25 @@ with col2:
         )
         draw.add_to(Map)
 
-
+    # Get map interaction results
     st_data = st_folium(Map, height=500, returned_objects=["last_draw"])
 
     # Handle draw result
     if st_data.get("last_draw") is not None:
         geometry = st_data["last_draw"]["geometry"]
-        ee_geom = geemap.geojson_to_ee(geometry)
-        clipped = GES.clip(ee_geom)
-        Map.addLayer(clipped, {}, 'GES', shown=True)
-    
+        if geometry:
+            ee_geom = geemap.geojson_to_ee(geometry)
+            clipped = GES_class.clip(ee_geom)
+            Map.addLayer(clipped, {
+                'min': 1, 'max': 5,
+                'palette': ['red', 'orange', 'yellow', 'lightgreen', 'green']
+            }, 'Clipped GES', shown=True)
+            st.success("Clipped GES displayed on map.")
+
+    # Add layer control
+    Map.add_child(folium.LayerControl())
+
+    # Show the map
     Map.to_streamlit(height=500)
-   
+
     st.markdown('</div>', unsafe_allow_html=True)
-
-
-
