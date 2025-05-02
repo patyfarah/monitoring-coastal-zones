@@ -46,39 +46,52 @@ def export_ndvi_to_drive():
     else:
         st.error(f"Export failed to start. Reason: {status}")
 
-# Vis Param
-lstVis = {
-  'min': 13000.0,
-  'max': 16500.0,
-  'palette': [
-    '040274', '040281', '0502a3', '0502b8', '0502ce', '0502e6',
-    '0602ff', '235cb1', '307ef3', '269db1', '30c8e2', '32d3ef',
-    '3be285', '3ff38f', '86e26f', '3ae237', 'b5e22e', 'd6e21f',
-    'fff705', 'ffd611', 'ffb613', 'ff8b13', 'ff6e08', 'ff500d',
-    'ff0000', 'de0101', 'c21301', 'a71001', '911003'
-  ],
-}
-
-ndviVis = {
-  'min': 0.0,
-  'max': 9000.0,
-  'palette': [
-    'ffffff', 'ce7e45', 'df923d', 'f1b555', 'fcd163', '99b718', '74a901',
-    '66a000', '529400', '3e8601', '207401', '056201', '004c00', '023b01',
-    '012e01', '011d01', '011301'
-  ],
-}
-
+# Visualization parameters for NDVI and LST
 vis_params = {
-    'min': -1.0,
-    'max': 1.0,
-    'palette': ['grey', 'yellow', 'green']
+    'min': 0,
+    'max': 100,
+    'palette': [
+      "#000080",  # 0–10: Water / Built-up (Navy Blue)
+      "#654321",  # 10–20: Barren / Dry Soil (Dark Brown)
+      "#A0522D",  # 20–30: Sparse Vegetation (Sienna Brown)
+      "#DAA520",  # 30–40: Dry Grass (Goldenrod)
+      "#ADFF2F",  # 40–50: Transition Zone (Green Yellow)
+      "#7CFC00",  # 50–60: Light Vegetation (Lawn Green)
+      "#32CD32",  # 60–70: Moderate Vegetation (Lime Green)
+      "#228B22",  # 70–80: Healthy Vegetation (Forest Green)
+      "#006400",  # 80–90: Dense Vegetation (Dark Green)
+      "#004B23"   # 90–100: Very Lush Vegetation (Deep Forest Green)
+  ]
 }
 
 lst_params = {
-    'min': 12,
-    'max': 52,
-    'palette': ['blue', 'green', 'yellow', 'red']
+    'min': 0,
+    'max': 100,
+    'palette': [
+    "#0000FF",  # 0–10: Deep Blue (Very Cold)
+    "#3399FF",  # 10–20: Sky Blue (Cold)
+    "#66CCFF",  # 20–30: Light Blue
+    "#66FF66",  # 30–40: Light Green
+    "#CCFF66",  # 40–50: Yellow Green
+    "#FFFF00",  # 50–60: Yellow (Moderate)
+    "#FFCC00",  # 60–70: Orange Yellow (Warm)
+    "#FF9900",  # 70–80: Orange (Hot)
+    "#FF3300",  # 80–90: Red Orange (Very Hot)
+    "#990000"   # 90–100: Dark Red (Extreme Heat)
+    ]
+}
+
+ges_params  = {
+    'min': 0,
+    'max': 100,
+    'palette': [
+    "#800000",  # Very Low - Severe Stress
+    "#FF4500",  # Low - Stressed
+    "#FFD700",  # Moderate - Transitional
+    "#9ACD32",  # High - Healthy
+    "#228B22"   # Very High - Very Healthy
+    ],
+    'labels': ['1:Degraded' , '2: Vulnerable', '3: Moderate', '4: Stable', '5:Healthy']
 }
 
 def mask_lst(image):
@@ -195,11 +208,11 @@ with col1:
 
     # 5 classes (equal intervals)
     GES_class = GES.multiply(100).int() \
-        .where(GES.lte(0.2), 1) \
-        .where(GES.gt(0.2).And(GES.lte(0.4)), 2) \
-        .where(GES.gt(0.4).And(GES.lte(0.6)), 3) \
-        .where(GES.gt(0.6).And(GES.lte(0.8)), 4) \
-        .where(GES.gt(0.8), 5)
+        .where(GES.lte(20), 1) \
+        .where(GES.gt(20).And(GES.lte(40)), 2) \
+        .where(GES.gt(40).And(GES.lte(60)), 3) \
+        .where(GES.gt(60).And(GES.lte(80)), 4) \
+        .where(GES.gt(80), 5)
 
         
     if st.button("Export to Drive"):
@@ -217,6 +230,7 @@ with col2:
     # Add mean NDVI and LST layers (optional, hidden by default)
     Map.addLayer(ndvi_mean, vis_params, 'Mean NDVI', shown=False)
     Map.addLayer(lst_mean, lst_params, 'Mean LST', shown=False)
+    Map.addLayer(GES_class,ges_params, 'GES Classification', shown=True)
 
     # Add country border
     Map.addLayer(filtered.style(**{
@@ -225,15 +239,8 @@ with col2:
         "width": 2
     }), {}, f"{country} Border")
 
-    # Add GES classification layer
-    #Map.addLayer(GES_class, {
-        'min': 1, 'max': 5,
-        'palette': ['red', 'orange', 'yellow', 'lightgreen', 'green']
-    }, 'GES Classification', shown=True)
-
     # Center the map and render
     Map.centerObject(filtered)
-    Map.add_child(folium.LayerControl())
     Map.to_streamlit(height=500)
 
     st.markdown('</div>', unsafe_allow_html=True)
