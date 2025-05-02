@@ -220,9 +220,7 @@ with col1:
     
     # Cleanup large variables to free memory
     del ndvi_normal, lst_normal, GES, GES_class,lst_mean, ndvi_mean
-    gc.collect()
-    # Re-center the map
-    Map.centerObject(region, 8)    
+    gc.collect() 
     
     if st.button("Export to Drive"):
         export_ndvi_to_drive()
