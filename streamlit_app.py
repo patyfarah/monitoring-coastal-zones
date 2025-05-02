@@ -223,7 +223,7 @@ with col1:
         .where(GES.gt(80), 5)
     
     # Cleanup large variables to free memory
-    del ndvi_normal, lst_normal, GES, GES_class,lst_mean, ndvi_mean,lst_valid_mask
+    del ndvi_normal, lst_normal, GES, GES_class,lst_mean, ndvi_mean
     gc.collect()
     # Re-center the map
     Map.centerObject(region, 8)    
