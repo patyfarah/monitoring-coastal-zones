@@ -211,6 +211,9 @@ with col1:
     # Calculate GES
     GES = ndvi_normal.multiply(0.5).add(lst_normal.multiply(0.5))
 
+    lst_valid_mask = lst_mean.mask()  # Areas where LST is valid
+    GES = GES.updateMask(lst_valid_mask)  # Keep only valid areas
+
     # 5 classes (equal intervals)
     GES_class = GES.multiply(100).int() \
         .where(GES.lte(20), 1) \
@@ -222,7 +225,9 @@ with col1:
     # Cleanup large variables to free memory
     del ndvi_normal, lst_normal, GES, GES_class,lst_mean, ndvi_mean,lst_valid_mask
     gc.collect()
-        
+    # Re-center the map
+    Map.centerObject(region, 8)    
+    
     if st.button("Export to Drive"):
         export_ndvi_to_drive()
   
