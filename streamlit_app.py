@@ -5,10 +5,6 @@ import streamlit as st
 import ee
 import geemap.foliumap as geemap
 from google.oauth2 import service_account
-import folium
-from folium.plugins import Draw
-from streamlit_folium import st_folium
-from shapely.geometry import shape
 import gc
 #--------------------------------------------------------
 # Initialization
