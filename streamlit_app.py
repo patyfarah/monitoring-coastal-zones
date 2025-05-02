@@ -217,10 +217,7 @@ with col1:
         .where(GES.gt(40).And(GES.lte(60)), 3) \
         .where(GES.gt(60).And(GES.lte(80)), 4) \
         .where(GES.gt(80), 5)
-    
-    # Cleanup large variables to free memory
-    del ndvi_normal, lst_normal, GES, GES_class,lst_mean, ndvi_mean
-    gc.collect() 
+
     
     if st.button("Export to Drive"):
         export_ndvi_to_drive()
@@ -235,8 +232,8 @@ with col2:
     Map = geemap.Map(zoom=6, draw_ctrl=False, data_ctrl=True)
 
     # Add mean NDVI and LST layers (optional, hidden by default)
-    Map.addLayer(ndvi_mean, vis_params, 'Mean NDVI', shown=False)
-    Map.addLayer(lst_mean, lst_params, 'Mean LST', shown=False)
+    Map.addLayer(ndvi_normal, vis_params, 'Mean NDVI', shown=False)
+    Map.addLayer(lst_normal, lst_params, 'Mean LST', shown=False)
     Map.addLayer(GES_class,ges_params, 'GES Classification', shown=True)
 
     # Add country border
@@ -247,6 +244,11 @@ with col2:
     }), {}, f"{country} Border")
 
     # Center the map and render
+        
+    # Cleanup large variables to free memory
+    del ndvi_normal, lst_normal, GES, GES_class,lst_mean, ndvi_mean
+    gc.collect() 
+    
     Map.centerObject(filtered)
     Map.to_streamlit(height=500)
 
