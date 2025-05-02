@@ -9,6 +9,7 @@ import folium
 from folium.plugins import Draw
 from streamlit_folium import st_folium
 from shapely.geometry import shape
+import gc
 #--------------------------------------------------------
 # Initialization
 #-------------------------------------------------------
@@ -200,8 +201,12 @@ with col1:
     lst_max = ee.Number(lst_minmax.get('LST_Day_1km_max'))
     
     # Normalize NDVI and LST
-    ndvi_normal = ndvi_mean.subtract(ndvi_min).divide(ndvi_max.subtract(ndvi_min))
-    lst_normal = lst_mean.subtract(lst_min).divide(lst_max.subtract(lst_min))
+    ndvi_normal = ndvi_mean.subtract(ndvi_min).divide(ndvi_max.subtract(ndvi_min)).multiply(100)
+    lst_normal = lst_mean.subtract(lst_min).divide(lst_max.subtract(lst_min)).multiply(100)
+
+    # Cleanup large variables to free memory
+    del ndvi, lst, ndvi_minmax, lst_minmax
+    gc.collect()
     
     # Calculate GES
     GES = ndvi_normal.multiply(0.5).add(lst_normal.multiply(0.5))
@@ -213,7 +218,10 @@ with col1:
         .where(GES.gt(40).And(GES.lte(60)), 3) \
         .where(GES.gt(60).And(GES.lte(80)), 4) \
         .where(GES.gt(80), 5)
-
+    
+    # Cleanup large variables to free memory
+    del ndvi_normal, lst_normal, GES, GES_class,lst_mean, ndvi_mean,lst_valid_mask
+    gc.collect()
         
     if st.button("Export to Drive"):
         export_ndvi_to_drive()
