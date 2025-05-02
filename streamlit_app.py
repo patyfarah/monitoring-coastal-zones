@@ -180,18 +180,18 @@ with col1:
     
     
     # Mean data
-    ndvi_mean = ndvi.median().clip(outer_band) 
+    ndvi_mean = ndvi.mean().clip(outer_band) 
     lst_mean = lst.mean().clip(outer_band)
 
     # Normalize NDVI and LST
     ndvi_minmax = ndvi_mean.reduceRegion(
-        reducer=ee.Reducer.minMax(), geometry=outer_band, scale=250, maxPixels=1e13
+        reducer=ee.Reducer.minMax(), geometry=outer_band, scale=1000, maxPixels=1e13
     )
     ndvi_min = ee.Number(ndvi_minmax.get('NDVI_min'))
     ndvi_max = ee.Number(ndvi_minmax.get('NDVI_max'))
     
     lst_minmax = lst_mean.reduceRegion(
-        reducer=ee.Reducer.minMax(), geometry=outer_band, scale=250, maxPixels=1e13
+        reducer=ee.Reducer.minMax(), geometry=outer_band, scale=1000, maxPixels=1e13
     )
     lst_min = ee.Number(lst_minmax.get('LST_Day_1km_min'))
     lst_max = ee.Number(lst_minmax.get('LST_Day_1km_max'))
