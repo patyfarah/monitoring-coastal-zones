@@ -211,7 +211,7 @@ with col1:
     GES = GES.updateMask(lst_valid_mask)  # Keep only valid areas
 
     # 5 classes (equal intervals)
-    GES_class = GES.multiply(100).int() \
+    GES_class = GES \
         .where(GES.lte(20), 1) \
         .where(GES.gt(20).And(GES.lte(40)), 2) \
         .where(GES.gt(40).And(GES.lte(60)), 3) \
