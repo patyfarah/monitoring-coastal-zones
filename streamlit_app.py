@@ -229,7 +229,7 @@ with col2:
     st.subheader("Good Environmental Status")
     st.markdown('<div class="right-column">', unsafe_allow_html=True)
 
-    Map = geemap.Map(zoom=6, draw_ctrl=False, data_ctrl=True)
+    Map = geemap.Map(zoom=8)
 
     # Add mean NDVI and LST layers (optional, hidden by default)
     Map.addLayer(ndvi_normal, vis_params, 'Mean NDVI', shown=False)
