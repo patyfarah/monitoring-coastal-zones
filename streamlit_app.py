@@ -147,7 +147,7 @@ with col1:
     st.markdown("**Year Range**")
     year_col1, year_col2 = st.columns(2)
     with year_col1:
-        start_year_val = st.number_input("Start", value=2002, key="start_year")
+        start_year_val = st.number_input("Start", value=2022, key="start_year")
     with year_col2:
         end_year_val = st.number_input("End", value=2022, key="end_year")
 
